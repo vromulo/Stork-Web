@@ -1,0 +1,53 @@
+<nav class="bg-surface border-b border-border-subtle sticky top-0 z-50 font-sans">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+            
+            <!-- Logo -->
+            <div class="flex-shrink-0 flex items-center">
+                <!-- Will put the logo here -->
+                <a href="/" class="text-3xl font-serif text-primary-dark tracking-tight hover:text-primary transition-colors">
+                    Stork
+                </a>
+            </div>
+
+            <!-- Search Bar (Always visible on mobile & desktop) -->
+            <div class="flex flex-1 max-w-md mx-4 md:mx-8">
+                <div class="relative w-full">
+                    <input type="text" placeholder="Search products..." 
+                        class="w-full bg-surface-subtle border border-border-subtle rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent text-text-main placeholder:text-text-muted">
+                    <div class="absolute left-3 top-2.5 text-text-muted">
+                        <!-- Search Icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Icons (Cart & Account) -->
+            <div class="flex items-center space-x-4">
+                <!-- Account Icon -->
+                <a href="#" class="text-text-main hover:text-primary transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                </a>
+                
+                <!-- Cart Icon with Badge -->
+                <a href="#" class="text-text-main hover:text-primary transition-colors relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <!-- Cart Badge (Using your Primary Pink) -->
+                    <span class="absolute -top-2 -right-2 bg-primary text-surface text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                        3
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Row: Category Filter -->
+    <x-category-filter />
+    
+</nav>

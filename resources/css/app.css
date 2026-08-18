@@ -4,6 +4,27 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+
+  /* --- Fonts --- */
+  --font-serif: "DM Serif Display", serif;
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+
+  /* --- Brand Colors --- */
+  --color-primary: #CF4173;
+  --color-primary-dark: #5D3140;
+  --color-secondary: #F39399;
+  --color-brand-light: #F6D8BD;
+
+  /* --- Semantic Colors (Status Indicators) --- */
+  --color-success: #10B981; /* Emerald - for 'Added to Cart' */
+  --color-danger: #E11D48;  /* Rose - for 'Out of Stock' or Errors */
+  --color-warning: #F59E0B; /* Amber - for 'Low Stock' warnings */
+  --color-info: #3B82F6;    /* Blue - for general info */
+
+  /* --- Warm Neutrals (For text, borders, and backgrounds) --- */
+  --color-surface: #ffffff;        /* Pure white for main content areas */
+  --color-surface-subtle: #F5F5F4; /* Stone 100 - Off-white/gray backgrounds */
+  --color-border-subtle: #E7E5E4;  /* Stone 200 - Light dividers */
+  --color-text-muted: #78716C;     /* Stone 500 - Secondary text/captions */
+  --color-text-main: #292524;      /* Stone 800 - Main body text (softer than pure black) */
 }
