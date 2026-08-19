@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title> <!-- set the brand name in the .env file at APP_NAME -->
+    <!-- set the brand name in the .env file at APP_NAME -->
+    <title> 
         {{ isset($title) ? $title . ' | ' . config('app.name') : config('app.name') }}
     </title>
 
