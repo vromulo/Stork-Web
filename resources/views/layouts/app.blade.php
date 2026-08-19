@@ -22,7 +22,10 @@
 <body class="">
 
     <!-- Navigation Bar -->
-    @include('components.navbar')
+    <header class="sticky top-0 z-50 flex flex-col w-full">
+        @include('components.navbar')
+        <x-category-filter />
+    </header>
 
     <!-- Main Content Area -->
     <main class="flex-grow">

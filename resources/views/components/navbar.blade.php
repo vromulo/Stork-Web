@@ -1,4 +1,4 @@
-<nav class="bg-surface border-b border-border-subtle sticky top-0 z-50 font-sans">
+<nav class="bg-surface border-b border-border-subtle sticky font-sans">
     
     <!-- Top Bar -->
     <div class="py-1.5 text-xs text-surface bg-primary-dark font-sans">
@@ -102,8 +102,4 @@
             </div>
         </div>
     </div>
-
-    <!-- Bottom Row: Category Filter -->
-    <x-category-filter />
-    
 </nav>
