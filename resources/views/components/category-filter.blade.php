@@ -6,6 +6,7 @@ $categories = [
 ];
 @endphp
 
+<!-- Layer 1 -->
 <div 
     x-data="{ 
         activeCategory: 'All',
@@ -29,7 +30,7 @@ $categories = [
             });
         }
     }" 
-    class="w-full bg-surface border-b border-border-subtle py-2"
+    class="w-full bg-surface border-b border-border-subtle py-2 relative z-10"
 >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Inner wrapper to contain absolute positioned fades and arrows securely -->
@@ -43,7 +44,7 @@ $categories = [
                 x-cloak
             ></div>
 
-            <!-- Left Navigation Arrow (z-20 to sit above fade) -->
+            <!-- Left Navigation Arrow -->
             <button 
                 x-show="showLeft" 
                 x-transition.opacity
@@ -84,7 +85,7 @@ $categories = [
                 x-cloak
             ></div>
 
-            <!-- Right Navigation Arrow (z-20 to sit above fade) -->
+            <!-- Right Navigation Arrow -->
             <button 
                 x-show="showRight" 
                 x-transition.opacity
