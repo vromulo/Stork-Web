@@ -30,7 +30,7 @@ $categories = [
             });
         }
     }" 
-    class="w-full bg-surface py-2"
+    class="w-full bg-surface py-2 relative z-20"
 >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Inner wrapper to contain absolute positioned fades and arrows securely -->
@@ -66,11 +66,11 @@ $categories = [
             >
                 @foreach($categories as $category)
                     <button 
-                        @click="activeCategory = '{{ addslashes($category) }}'"
+                        @click="activeCategory = '{{ addslashes($category) }}'; $dispatch('filter-category', '{{ addslashes($category) }}')"
                         :class="activeCategory === '{{ addslashes($category) }}' 
                             ? 'bg-primary text-surface shadow-sm' 
                             : 'bg-surface-subtle text-text-main hover:bg-border-subtle hover:text-primary-dark'"
-                        class="flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-200 whitespace-nowrap"
+                        class="flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-200 whitespace-nowrap cursor-pointer"
                     >
                         {{ $category }}
                     </button>

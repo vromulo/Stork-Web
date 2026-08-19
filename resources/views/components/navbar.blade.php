@@ -1,4 +1,4 @@
-<nav class="bg-surface border-b border-border-subtle sticky font-sans">
+<nav class="bg-surface border-b border-border-subtle sticky top-0 z-50 font-sans">
     
     <!-- Top Bar -->
     <div class="py-1.5 text-xs text-surface bg-primary-dark font-sans">
@@ -70,8 +70,8 @@
                         
                         <!-- Dropdown Links -->
                         <div class="p-2 flex flex-col space-y-1">
-                            <!-- Sign In / Register -->
-                            <a href="#" class="block px-3 py-2 text-xs font-bold text-primary-dark rounded-lg hover:bg-surface-subtle hover:text-primary transition-colors">
+                            <!-- Sign In / Register (Connected Route) -->
+                            <a href="{{ route('login') }}" class="block px-3 py-2 text-xs font-bold text-primary-dark rounded-lg hover:bg-surface-subtle hover:text-primary transition-colors">
                                 Sign in / Register
                             </a>
                             
