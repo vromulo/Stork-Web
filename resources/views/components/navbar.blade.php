@@ -1,10 +1,10 @@
-<nav class="bg-surface border-b border-border-subtle sticky top-0 z-50 font-sans">
+<nav class="bg-surface sticky top-0 z-50 font-sans">
     <div class="py-1.5 text-xs text-surface bg-primary-dark font-sans">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <a href="#" class="hover:text-brand-light hover:underline transition-colors">Become a Seller</a>
+                <a href="#" class="hover:text-brand-light hover:underline transition-colors">Start selling</a>
                 <span class="text-surface-subtle opacity-70">|</span>
-                <a href="#" class="hover:text-brand-light hover:underline transition-colors">Become a Courier</a>
+                <a href="#" class="hover:text-brand-light hover:underline transition-colors">Deliver with us</a>
             </div>
             <div class="flex items-center space-x-4">
                 <a href="#" class="hover:text-brand-light hover:underline transition-colors">Help</a>
@@ -17,7 +17,7 @@
     <div class="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
             <div class="flex-shrink-0 flex items-center">
-                <a href="/" class="text-3xl font-serif text-primary-dark tracking-tight hover:text-primary transition-colors">Stork</a>
+                <a href="/" class="text-5xl leading-none font-serif text-primary-dark tracking-tight hover:text-primary transition-colors">Stork</a>
             </div>
 
             <div class="flex flex-1 max-w-3xl mx-4 md:mx-8">

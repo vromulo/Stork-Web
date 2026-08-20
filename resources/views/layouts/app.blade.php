@@ -21,10 +21,26 @@
 
 <body class="">
 
-    <!-- Navigation Bar -->
-    <header class="sticky top-0 z-50 flex flex-col w-full">
+    <!-- Smart Navigation Bar -->
+    <header 
+        x-data="{ 
+            showHeader: true, 
+            lastScroll: 0 
+        }" 
+        @scroll.window="
+            let currentScroll = window.scrollY;
+            if (currentScroll > lastScroll && currentScroll > 100) {
+                showHeader = false; // Scrolling down (and past the very top)
+            } else if (currentScroll < lastScroll) {
+                showHeader = true;  // Scrolling up
+            }
+            lastScroll = currentScroll;
+        "
+        :class="showHeader ? 'translate-y-0' : '-translate-y-full'"
+        class="sticky top-0 z-50 flex flex-col w-full transition-transform duration-300 ease-in-out"
+    >
         @include('components.navbar')
-        <x-category-filter />
+        <x-mega-menu />
     </header>
 
     <!-- Main Content Area -->
@@ -36,6 +52,9 @@
     @if (!($hideFooter ?? false)) <!-- if $hideFooter is set to True, footer will be hidden -->
         @include('components.footer')
     @endif
+
+    <!-- Scroll to Top Component -->
+    <x-scroll-to-top />
 
     @livewireScripts
 
