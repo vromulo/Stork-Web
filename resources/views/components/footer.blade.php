@@ -33,7 +33,7 @@
                     <li><a href="#" class="text-sm text-text-muted hover:text-primary transition-colors">About Storkia</a></li>
                     <li><a href="#" class="text-sm text-text-muted hover:text-primary transition-colors">Careers</a></li>
                     <li><a href="#" class="text-sm text-text-muted hover:text-primary transition-colors">Become a Seller</a></li>
-                    <li><a href="#" class="text-sm text-text-muted hover:text-primary transition-colors">Become a Logistic</a></li>
+                    <li><a href="#" class="text-sm text-text-muted hover:text-primary transition-colors">Become a Logistics Partner</a></li>
                     <li><a href="#" class="text-sm text-text-muted hover:text-primary transition-colors">Read our Blog</a></li>
                 </ul>
             </div>

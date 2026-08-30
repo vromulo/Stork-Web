@@ -2,9 +2,9 @@
     <div class="py-1.5 text-xs text-surface bg-primary-dark font-sans">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <a href="#" class="hover:text-brand-light hover:underline transition-colors">Start selling</a>
+                <a href="#" class="hover:text-brand-light hover:underline transition-colors">Start Selling</a>
                 <span class="text-surface-subtle opacity-70">|</span>
-                <a href="#" class="hover:text-brand-light hover:underline transition-colors">Deliver with us</a>
+                <a href="#" class="hover:text-brand-light hover:underline transition-colors">Join the Logistics Team</a>
             </div>
             <div class="flex items-center space-x-4">
                 <a href="#" class="hover:text-brand-light hover:underline transition-colors">Help</a>
