@@ -5,7 +5,7 @@
             
             <!-- Brand Section -->
             <div class="flex flex-col">
-                <a href="/" class="text-5xl leading-none font-serif text-primary-dark tracking-tight hover:text-primary transition-colors mb-4 inline-block">Stork</a>
+                <a href="/" class="text-5xl leading-none font-serif text-primary-dark tracking-tight hover:text-primary transition-colors mb-4 inline-block">Storkia</a>
                 <p class="text-sm text-text-muted leading-relaxed mb-6">
                     Fast delivery. Exclusive deals. Right to your doorstep. Experience the fastest routing and secure handling in the city.
                 </p>
@@ -30,10 +30,10 @@
             <div>
                 <h3 class="text-sm font-bold text-text-main mb-4 uppercase tracking-wider">Company</h3>
                 <ul class="space-y-3">
-                    <li><a href="#" class="text-sm text-text-muted hover:text-primary transition-colors">About Stork</a></li>
+                    <li><a href="#" class="text-sm text-text-muted hover:text-primary transition-colors">About Storkia</a></li>
                     <li><a href="#" class="text-sm text-text-muted hover:text-primary transition-colors">Careers</a></li>
                     <li><a href="#" class="text-sm text-text-muted hover:text-primary transition-colors">Become a Seller</a></li>
-                    <li><a href="#" class="text-sm text-text-muted hover:text-primary transition-colors">Become a Courier</a></li>
+                    <li><a href="#" class="text-sm text-text-muted hover:text-primary transition-colors">Become a Logistic</a></li>
                     <li><a href="#" class="text-sm text-text-muted hover:text-primary transition-colors">Read our Blog</a></li>
                 </ul>
             </div>
@@ -69,7 +69,7 @@
         <!-- Bottom Bar -->
         <div class="pt-8 border-t border-border-subtle flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p class="text-xs text-text-muted">
-                &copy; {{ date('Y') }} {{ config('app.name', 'Stork') }}. All rights reserved.
+                &copy; {{ date('Y') }} {{ config('app.name', 'Storkia') }}. All rights reserved.
             </p>
             <div class="flex space-x-6 text-xs text-text-muted">
                 <a href="#" class="hover:text-primary transition-colors">Privacy Policy</a>

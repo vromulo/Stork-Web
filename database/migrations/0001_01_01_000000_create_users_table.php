@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
+            // EXISTING
             $table->id();
             $table->string('first_name');
             $table->string('last_name');
@@ -23,15 +24,22 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            
+            // NEW: Added the role enumeration
+            $table->enum('role', ['Buyer', 'Seller', 'Logistics'])->default('Buyer');
+            
+            // EXISTING
             $table->timestamps();
         });
 
+        // EXISTING (Unchanged)
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
 
+        // EXISTING (Unchanged)
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->foreignId('user_id')->nullable()->index();
@@ -47,6 +55,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // EXISTING
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');

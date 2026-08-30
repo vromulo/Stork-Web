@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+// EXISTING
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -18,9 +18,10 @@ use Illuminate\Notifications\Notifiable;
     'contact_no', 
     'birthday', 
     'email', 
-    'password'
+    'password',
+    'role' // NEW: Added role to fillable attributes
 ])]
-#[Hidden(['password', 'remember_token'])]
+#[Hidden(['password', 'remember_token'])] // EXISTING
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -31,7 +32,7 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
+    protected function casts(): array // EXISTING
     {
         return [
             'email_verified_at' => 'datetime',

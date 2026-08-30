@@ -24,6 +24,17 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            
+            // NEW: Check the user's role and redirect to the correct dashboard
+            $role = Auth::user()->role;
+            
+            if ($role === 'Seller') {
+                return redirect()->route('seller.seller-dashboard');
+            } elseif ($role === 'Logistics') {
+                return redirect()->route('logistics.logistics-dashboard');
+            }
+            
+            // DEFAULT: Buyer dashboard (home)
             return redirect()->route('home');
         }
 
@@ -37,7 +48,7 @@ class AuthController extends Controller
         return view('pages.buyer.auth.register');
     }
 
-    // public function register(Request $request)
+        // public function register(Request $request)
     // {
     //     // Custom Error Messages for a better user experience
     //     $messages = [
@@ -70,7 +81,6 @@ class AuthController extends Controller
 
     //     return redirect()->route('login');
     // }
-
     public function logout(Request $request)
     {
         Auth::logout();

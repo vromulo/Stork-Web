@@ -17,7 +17,7 @@
     <div class="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
             <div class="flex-shrink-0 flex items-center">
-                <a href="/" class="text-5xl leading-none font-serif text-primary-dark tracking-tight hover:text-primary transition-colors">Stork</a>
+                <a href="/" class="text-5xl leading-none font-serif text-primary-dark tracking-tight hover:text-primary transition-colors">Storkia</a>
             </div>
 
             <div class="flex flex-1 max-w-3xl mx-4 md:mx-8">

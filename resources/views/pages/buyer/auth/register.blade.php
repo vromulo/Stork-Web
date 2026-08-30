@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stork - Register</title>
+    <title>Storkia - Register</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 
@@ -22,7 +22,7 @@
         <div class="w-full max-w-2xl bg-surface/90 backdrop-blur-sm p-8 rounded-[2rem] shadow-xl border border-border-subtle my-auto">
 
             <div class="text-center mb-8">
-                <a href="/" class="text-4xl font-serif text-primary-dark tracking-tight hover:text-primary transition-colors inline-block mb-1">Stork</a>
+                <a href="/" wire:navigate class="text-4xl font-serif text-primary-dark tracking-tight hover:text-primary transition-colors inline-block mb-1">Storkia</a>
                 <h1 class="text-2xl font-bold text-text-main">Create your Profile</h1>
                 <p class="text-text-muted mt-1 text-sm">Please fill in the details below to join us.</p>
             </div>
@@ -31,7 +31,7 @@
 
             <p class="mt-6 text-center text-xs text-text-muted">
                 Already have an account?
-                <a href="{{ route('login') }}" class="font-bold text-primary hover:text-primary-dark transition-colors">Sign in here</a>
+                <a href="{{ route('login') }}" wire:navigate class="font-bold text-primary hover:text-primary-dark transition-colors">Sign in here</a>
             </p>
         </div>
     </div>

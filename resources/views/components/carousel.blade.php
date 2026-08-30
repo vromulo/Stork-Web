@@ -1,5 +1,5 @@
 <div x-data="{ 
-        activeSlide: 1, 
+        activeSlide: parseInt(sessionStorage.getItem('storkiaCarouselSlide')) || 1, 
         timer: null,
         startTimer() {
             this.timer = setInterval(() => { 
@@ -12,7 +12,10 @@
             this.startTimer();
         }
      }"
-     x-init="startTimer()"
+     x-init="
+        $watch('activeSlide', value => sessionStorage.setItem('storkiaCarouselSlide', value));
+        startTimer();
+     "
      class="relative w-1/2 h-full bg-primary-dark flex flex-col items-center justify-center overflow-hidden shrink-0">
     
     <!-- Rich Pink Gradient Overlay -->
@@ -85,9 +88,9 @@
 
         <!-- Manual Navigation Dots (Resets Timer) -->
         <div class="flex justify-center space-x-4 mt-8 w-full relative z-20">
-            <button @click="resetTimer(1)" :class="{'bg-brand-light w-10': activeSlide === 1, 'bg-surface opacity-40 w-3 hover:opacity-70': activeSlide !== 1}" class="h-3 rounded-full transition-all duration-300"></button>
-            <button @click="resetTimer(2)" :class="{'bg-brand-light w-10': activeSlide === 2, 'bg-surface opacity-40 w-3 hover:opacity-70': activeSlide !== 2}" class="h-3 rounded-full transition-all duration-300"></button>
-            <button @click="resetTimer(3)" :class="{'bg-brand-light w-10': activeSlide === 3, 'bg-surface opacity-40 w-3 hover:opacity-70': activeSlide !== 3}" class="h-3 rounded-full transition-all duration-300"></button>
+            <button @click="resetTimer(1)" :class="{'bg-brand-light w-10': activeSlide === 1, 'bg-surface opacity-40 w-3 hover:opacity-70': activeSlide !== 1}" class="h-3 rounded-full transition-all duration-300 cursor-pointer"></button>
+            <button @click="resetTimer(2)" :class="{'bg-brand-light w-10': activeSlide === 2, 'bg-surface opacity-40 w-3 hover:opacity-70': activeSlide !== 2}" class="h-3 rounded-full transition-all duration-300 cursor-pointer"></button>
+            <button @click="resetTimer(3)" :class="{'bg-brand-light w-10': activeSlide === 3, 'bg-surface opacity-40 w-3 hover:opacity-70': activeSlide !== 3}" class="h-3 rounded-full transition-all duration-300 cursor-pointer"></button>
         </div>
     </div>
 </div>

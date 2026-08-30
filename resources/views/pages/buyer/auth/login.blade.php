@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stork - Login</title>
+    <title>Storkia - Login</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    @livewireStyles
 </head>
-<body class="m-0 p-0 h-screen w-screen flex font-sans antialiased text-text-main overflow-hidden">
+<body class="m-0 p-0 h-screen w-screen flex font-sans antialiased text-text-main overflow-hidden bg-surface">
     
     <x-carousel />
 
@@ -15,7 +15,7 @@
         <div class="w-full max-w-md bg-surface/90 backdrop-blur-sm p-10 rounded-[2rem] shadow-xl border border-border-subtle">
             
             <div class="text-center mb-8">
-                <a href="/" class="text-5xl font-serif text-primary-dark tracking-tight hover:text-primary transition-colors inline-block mb-2">Stork</a>
+                <a href="/" wire:navigate class="text-5xl font-serif text-primary-dark tracking-tight hover:text-primary transition-colors inline-block mb-2">Storkia</a>
                 <h1 class="text-2xl font-bold text-text-main">Welcome Back</h1>
                 <p class="text-text-muted mt-1 text-sm">Please sign in to your account</p>
                 
@@ -58,9 +58,11 @@
 
             <p class="mt-8 text-center text-sm text-text-muted">
                 Don't have an account? 
-                <a href="{{ route('register') }}" class="font-bold text-primary hover:text-primary-dark transition-colors">Create one</a>
+                <a href="{{ route('register') }}" wire:navigate class="font-bold text-primary hover:text-primary-dark transition-colors">Create one</a>
             </p>
         </div>
     </div>
+
+    @livewireScripts
 </body>
 </html>
