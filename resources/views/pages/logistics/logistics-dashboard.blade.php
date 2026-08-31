@@ -42,7 +42,7 @@
             
             <div class="bg-brand-light/20 border border-border-subtle rounded-2xl p-5 mb-8 w-full shadow-sm">
                 <p class="text-text-main text-sm sm:text-base leading-relaxed font-medium">
-                    You are accessing an <span class="font-bold text-primary-dark">Administrative Account</span>. 
+                    You are accessing a <span class="font-bold text-primary-dark">Logistics Account</span>. 
                     <br><br>
                     <span class="text-text-muted">Please log in from a computer to access this dashboard interface.</span>
                 </p>

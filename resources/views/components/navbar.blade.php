@@ -1,5 +1,6 @@
 <nav class="bg-surface sticky top-0 z-50 font-sans">
-    <div class="py-1.5 text-xs text-surface bg-primary-dark font-sans">
+    <!-- Top notification bar: Hidden on mobile using 'hidden md:block' -->
+    <div class="hidden md:block py-1.5 text-xs text-surface bg-primary-dark font-sans">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <div class="flex items-center space-x-4">
                 <a href="#" class="hover:text-brand-light hover:underline transition-colors">Start Selling</a>
@@ -16,13 +17,21 @@
 
     <div class="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
+            
+            <!-- Responsive Logo -->
             <div class="flex-shrink-0 flex items-center">
-                <a href="/" class="text-5xl leading-none font-serif text-primary-dark tracking-tight hover:text-primary transition-colors">Storkia</a>
+                <a href="/" class="flex items-center">
+                    <!-- Mobile view: Minimized logo -->
+                    <img src="{{ asset('assets/storkia-minimized.png') }}" alt="Storkia" class="block md:hidden h-8 w-auto object-contain">
+                    <!-- Desktop view: Maximized logo -->
+                    <img src="{{ asset('assets/storkia-maximized.png') }}" alt="Storkia" class="hidden md:block h-10 w-auto object-contain">
+                </a>
             </div>
 
-            <div class="flex flex-1 max-w-3xl mx-4 md:mx-8">
+            <!-- Search Bar -->
+            <div class="flex flex-1 max-w-3xl mx-3 sm:mx-4 md:mx-8">
                 <div class="relative w-full">
-                    <input type="text" placeholder="Search products..." class="w-full bg-surface-subtle border border-border-subtle rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent text-text-main placeholder:text-text-muted">
+                    <input type="text" placeholder="Search products..." class="w-full bg-surface-subtle border border-border-subtle rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent text-text-main placeholder:text-text-muted text-sm sm:text-base">
                     <div class="absolute left-3 top-2.5 text-text-muted">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -31,9 +40,10 @@
                 </div>
             </div>
 
-            <div class="flex items-center space-x-6">
+            <!-- Action Icons: Spacing optimized for mobile using 'space-x-4 md:space-x-6' -->
+            <div class="flex items-center space-x-4 md:space-x-6">
                 
-                <!-- Added a timeout delay for better UX -->
+                <!-- Profile Menu -->
                 <div x-data="{ open: false, timer: null }" 
                      @mouseenter="clearTimeout(timer); open = true" 
                      @mouseleave="timer = setTimeout(() => { open = false }, 300)" 
@@ -77,11 +87,12 @@
                     </div>
                 </div>
                 
+                <!-- Cart -->
                 <a href="#" class="relative flex items-center text-text-main hover:text-primary transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
-                    <span class="absolute -top-2 -right-2 bg-primary text-surface text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    <span class="absolute -top-2 -right-2 bg-primary text-surface text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center" style="background-color: #d8457c; color: white;">3</span>
                 </a>
             </div>
         </div>

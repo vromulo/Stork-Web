@@ -14,9 +14,9 @@
            @click="if (window.location.href.split('?')[0] === '{{ route('logistics.logistics-dashboard') }}') { $event.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'}); }"
            class="flex items-center justify-center h-10 w-full overflow-hidden text-primary-dark transition-colors cursor-pointer">
             <!-- Full Logo when open -->
-            <span x-show="sidebarOpen" x-transition.opacity.duration.300ms class="text-4xl font-serif tracking-tight whitespace-nowrap">Storkia</span>
+            <img x-show="sidebarOpen" x-transition.opacity.duration.300ms src="{{ asset('assets/storkia-maximized.png') }}" alt="Storkia" class="h-8 w-auto" />
             <!-- Icon/Initial when minimized -->
-            <span x-show="!sidebarOpen" x-cloak class="text-3xl font-serif font-bold">S</span>
+            <img x-show="!sidebarOpen" x-cloak src="{{ asset('assets/storkia-minimized.png') }}" alt="S" class="h-8 w-auto" />
         </a>
     </div>
 

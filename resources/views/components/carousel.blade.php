@@ -16,21 +16,17 @@
         $watch('activeSlide', value => sessionStorage.setItem('storkiaCarouselSlide', value));
         startTimer();
      "
-     class="relative w-1/2 h-full bg-primary-dark flex flex-col items-center justify-center overflow-hidden shrink-0">
+     class="relative w-full h-full bg-primary-dark flex flex-col items-center justify-center overflow-hidden shrink-0">
     
-    <!-- Rich Pink Gradient Overlay -->
     <div class="absolute inset-0 bg-primary opacity-90"></div>
     
-    <!-- Subtle background accents -->
     <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-secondary rounded-full filter blur-[100px] opacity-40 pointer-events-none"></div>
     <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-brand-light rounded-full filter blur-[100px] opacity-20 pointer-events-none"></div>
 
     <div class="relative z-10 w-full max-w-lg px-12 text-center flex flex-col items-center">
         
-        <!-- Grid container for pure crossfading -->
         <div class="grid grid-cols-1 grid-rows-1 place-items-center w-full min-h-[300px]">
             
-            <!-- Slide 1 -->
             <div x-show="activeSlide === 1" 
                  x-transition:enter="transition ease-in-out duration-1000"
                  x-transition:enter-start="opacity-0"
@@ -48,7 +44,6 @@
                 <p class="text-surface font-sans text-lg opacity-90 leading-relaxed">Experience the fastest routing in the city. Your package arrives before you know it.</p>
             </div>
 
-            <!-- Slide 2 -->
             <div x-show="activeSlide === 2" 
                  x-transition:enter="transition ease-in-out duration-1000"
                  x-transition:enter-start="opacity-0"
@@ -66,7 +61,6 @@
                 <p class="text-surface font-sans text-lg opacity-90 leading-relaxed">Every item is tracked and handled with the utmost care by our verified couriers.</p>
             </div>
 
-            <!-- Slide 3 -->
             <div x-show="activeSlide === 3" 
                  x-transition:enter="transition ease-in-out duration-1000"
                  x-transition:enter-start="opacity-0"
@@ -86,7 +80,6 @@
             </div>
         </div>
 
-        <!-- Manual Navigation Dots (Resets Timer) -->
         <div class="flex justify-center space-x-4 mt-8 w-full relative z-20">
             <button @click="resetTimer(1)" :class="{'bg-brand-light w-10': activeSlide === 1, 'bg-surface opacity-40 w-3 hover:opacity-70': activeSlide !== 1}" class="h-3 rounded-full transition-all duration-300 cursor-pointer"></button>
             <button @click="resetTimer(2)" :class="{'bg-brand-light w-10': activeSlide === 2, 'bg-surface opacity-40 w-3 hover:opacity-70': activeSlide !== 2}" class="h-3 rounded-full transition-all duration-300 cursor-pointer"></button>
