@@ -1,0 +1,283 @@
+<?php
+
+namespace App\Livewire\Auth;
+
+use App\Mail\RegistrationOtpMail;
+use App\Models\RegistrationOtp;
+use App\Models\SellerProfile;
+use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+
+class SellerRegisterWizard extends Component
+{
+    use WithFileUploads;
+
+    public int $currentStep = 1;
+    public bool $codeSent = false;
+    public bool $registrationSuccessful = false;
+
+    // Step 1: Email
+    public string $email = '';
+    public string $code = '';
+    public ?string $verificationToken = null;
+    public int $resendCooldown = 0;
+    public int $attemptsRemaining = RegistrationOtp::MAX_ATTEMPTS;
+
+    // Step 2: Personal Info
+    public string $first_name = '';
+    public string $last_name = '';
+    public string $middle_initial = '';
+    public string $sex = '';
+    public string $birthday = '';
+
+    // Step 3: Contact & Address
+    public string $contact_no = '';
+    public string $province_code = '';
+    public string $municipality_code = '';
+    public string $barangay_code = '';
+    public string $province = '';
+    public string $municipality = '';
+    public string $barangay = '';
+    public string $street = '';
+    public string $house_details = '';
+
+    // API Arrays
+    public array $provinces = [];
+    public array $municipalities = [];
+    public array $barangays = [];
+
+    // Step 4: Business Info
+    public string $business_name = '';
+    public string $line_of_business = '';
+
+    // Step 5: Documents
+    public $valid_id;
+    public $business_permit;
+
+    // Step 6: Password
+    public string $password = '';
+    public string $password_confirmation = '';
+
+    public function mount()
+    {
+        $this->loadProvinces();
+    }
+
+    public function updated($propertyName)
+    {
+        if ($this->currentStep === 1 && $propertyName === 'email') {
+            $this->validateOnly('email', ['email' => ['required', 'email:rfc,dns']]);
+        } elseif ($this->currentStep === 2) {
+            $this->validateOnly($propertyName, $this->getStep2Rules(), $this->getStep2Messages());
+        } elseif ($this->currentStep === 3) {
+            $this->validateOnly($propertyName, $this->getStep3Rules());
+        } elseif ($this->currentStep === 4) {
+            $this->validateOnly($propertyName, $this->getStep4Rules());
+        } elseif ($this->currentStep === 5) {
+            $this->validateOnly($propertyName, $this->getStep5Rules());
+        } elseif ($this->currentStep === 6) {
+            if (in_array($propertyName, ['password', 'password_confirmation'])) {
+                $this->validateOnly('password', $this->getStep6Rules());
+            }
+        }
+    }
+
+    // --- Address API Integration (PSGC) ---
+    public function loadProvinces()
+    {
+        try {
+            $response = Http::get('https://psgc.gitlab.io/api/provinces');
+            if ($response->successful()) $this->provinces = $response->json();
+        } catch (\Exception $e) {}
+    }
+
+    public function updatedProvinceCode($code)
+    {
+        $this->municipality_code = '';
+        $this->barangay_code = '';
+        $this->municipalities = [];
+        $this->barangays = [];
+        
+        $prov = collect($this->provinces)->firstWhere('code', $code);
+        $this->province = $prov ? $prov['name'] : '';
+
+        if ($code) {
+            try {
+                $response = Http::get("https://psgc.gitlab.io/api/provinces/{$code}/cities-municipalities");
+                if ($response->successful()) $this->municipalities = $response->json();
+            } catch (\Exception $e) {}
+        }
+    }
+
+    public function updatedMunicipalityCode($code)
+    {
+        $this->barangay_code = '';
+        $this->barangays = [];
+
+        $mun = collect($this->municipalities)->firstWhere('code', $code);
+        $this->municipality = $mun ? $mun['name'] : '';
+
+        if ($code) {
+            try {
+                $response = Http::get("https://psgc.gitlab.io/api/cities-municipalities/{$code}/barangays");
+                if ($response->successful()) $this->barangays = $response->json();
+            } catch (\Exception $e) {}
+        }
+    }
+
+    public function updatedBarangayCode($code)
+    {
+        $brgy = collect($this->barangays)->firstWhere('code', $code);
+        $this->barangay = $brgy ? $brgy['name'] : '';
+    }
+
+    // --- OTP Logic (Reused from Buyer) ---
+    public function sendCode(): void { /* Identical to RegisterWizard.php */ 
+        $this->validateOnly('email', ['email' => ['required', 'email:rfc,dns']]);
+        if (User::where('email', $this->email)->exists()) {
+            $this->addError('email', 'This email is already registered.');
+            return;
+        }
+        $this->issueNewCode();
+    }
+    
+    protected function issueNewCode(): void {
+        $code = RegistrationOtp::generateCode();
+        try {
+            Mail::to($this->email)->send(new RegistrationOtpMail($code, RegistrationOtp::CODE_TTL_MINUTES));
+        } catch (\Throwable $e) { return; }
+
+        RegistrationOtp::updateOrCreate(['email' => $this->email], [
+            'code_hash' => Hash::make($code),
+            'attempts' => 0, 'last_sent_at' => now(),
+            'code_expires_at' => now()->addMinutes(RegistrationOtp::CODE_TTL_MINUTES),
+        ]);
+        $this->code = ''; $this->codeSent = true; $this->attemptsRemaining = RegistrationOtp::MAX_ATTEMPTS;
+    }
+
+    public function verifyCode(): void {
+        $this->validateOnly('code', ['code' => ['required', 'digits:6']]);
+        $record = RegistrationOtp::where('email', $this->email)->first();
+        if (! $record || $record->isCodeExpired() || ! Hash::check($this->code, $record->code_hash)) {
+            $this->addError('code', "Invalid or expired code."); return;
+        }
+        $token = Str::random(64);
+        $record->update(['verified_at' => now(), 'verification_token' => $token]);
+        $this->verificationToken = $token;
+        $this->currentStep = 2;
+    }
+
+    // --- Progression Rules ---
+    protected function getStep2Rules(): array {
+        return [
+            'first_name' => ['required', 'string', 'regex:/^[A-Za-z\s]+$/'],
+            'last_name' => ['required', 'string', 'regex:/^[A-Za-z\s]+$/'],
+            'middle_initial' => ['nullable', 'string', 'regex:/^[A-Za-z]$/'],
+            'sex' => ['required', 'in:male,female'],
+            'birthday' => ['required', 'date', 'before_or_equal:' . now()->subYears(18)->format('Y-m-d'), 'after_or_equal:' . now()->subYears(100)->format('Y-m-d')],
+        ];
+    }
+    protected function getStep2Messages(): array {
+        return ['birthday.before_or_equal' => 'You must be at least 18 years old.'];
+    }
+
+    protected function getStep3Rules(): array {
+        return [
+            'contact_no' => ['required', 'regex:/^(09|\+639)\d{9}$/'],
+            'province_code' => ['required'],
+            'municipality_code' => ['required'],
+            'barangay_code' => ['required'],
+        ];
+    }
+
+    protected function getStep4Rules(): array {
+        return ['business_name' => ['required', 'string'], 'line_of_business' => ['required', 'string']];
+    }
+
+    protected function getStep5Rules(): array {
+        return [
+            'valid_id' => ['required', 'image', 'max:5120'], // 5MB Max
+            'business_permit' => ['required', 'image', 'max:5120'],
+        ];
+    }
+
+    protected function getStep6Rules(): array {
+        return [
+            'password' => ['required', 'string', 'min:8', 'confirmed', function ($attr, $value, $fail) {
+                if (!preg_match('/[A-Z]/', $value)) $fail('Must contain 1 uppercase letter.');
+                if (!preg_match('/[0-9]/', $value)) $fail('Must contain 1 number.');
+                if (!preg_match('/[\W_]/', $value)) $fail('Must contain 1 special character.');
+            }],
+        ];
+    }
+
+    public function nextStep(int $step) {
+        if ($step === 2) $this->validate($this->getStep2Rules(), $this->getStep2Messages());
+        if ($step === 3) $this->validate($this->getStep3Rules());
+        if ($step === 4) $this->validate($this->getStep4Rules());
+        if ($step === 5) $this->validate($this->getStep5Rules());
+        if ($step === 6) $this->validate($this->getStep6Rules());
+        $this->currentStep = $step + 1;
+    }
+
+    public function backToStep(int $step) {
+        if ($step < $this->currentStep) $this->currentStep = $step;
+    }
+
+    public function register()
+    {
+        // Final complete validation before submission
+        $this->validate($this->getStep6Rules());
+
+        DB::transaction(function () {
+            // 1. Create Base User (Role: Seller)
+            $user = User::create([
+                'first_name' => ucwords(strtolower($this->first_name)),
+                'last_name' => ucwords(strtolower($this->last_name)),
+                'middle_initial' => $this->middle_initial ? strtoupper($this->middle_initial) : null,
+                'sex' => $this->sex,
+                'email' => $this->email,
+                'contact_no' => $this->contact_no,
+                'birthday' => $this->birthday,
+                'password' => Hash::make($this->password),
+                'role' => 'Seller',
+            ]);
+
+            // 2. Upload Files
+            $idPath = $this->valid_id->store('seller_documents/ids', 'public');
+            $permitPath = $this->business_permit->store('seller_documents/permits', 'public');
+
+            // 3. Create Seller Profile (Status: Pending)
+            SellerProfile::create([
+                'user_id' => $user->id,
+                'contact_no' => $this->contact_no,
+                'province' => $this->province,
+                'municipality' => $this->municipality,
+                'barangay' => $this->barangay,
+                'street' => $this->street,
+                'house_details' => $this->house_details,
+                'business_name' => $this->business_name,
+                'line_of_business' => $this->line_of_business,
+                'id_path' => $idPath,
+                'permit_path' => $permitPath,
+                'status' => 'pending',
+            ]);
+
+            RegistrationOtp::where('email', $this->email)->delete();
+        });
+
+        $this->registrationSuccessful = true;
+    }
+
+    public function render()
+    {
+        return view('livewire.auth.seller-register-wizard');
+    }
+}
