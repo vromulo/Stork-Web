@@ -54,14 +54,20 @@ Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('categ
 
 // EXISTING: Guest Routes
 Route::middleware('guest')->group(function () {
-    // Buyer Authentication Routes
+
+    // Default / Buyer Auth
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
     
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    
 
-    // Seller Authentication Routes
+    // Seller Auth
+    Route::get('/seller/login', function() { return view('pages.seller.auth.login'); })->name('seller.login');
     Route::get('/seller/register', [SellerAuthController::class, 'showRegister'])->name('seller.register');
+
+    // Logistics Auth
+    Route::get('/logistics/login', function() { return view('pages.logistics.auth.login'); })->name('logistics.login');
 });
 
 // --------------------------------------------------------------------------
