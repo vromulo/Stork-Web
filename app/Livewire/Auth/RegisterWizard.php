@@ -37,10 +37,29 @@ class RegisterWizard extends Component
     public string $password = '';
     public string $password_confirmation = '';
 
+    /**
+     * Real-time validation hook triggered whenever a property is updated.
+     */
+    public function updated($propertyName)
+    {
+        if ($this->currentStep === 1 && $propertyName === 'email') {
+            $this->validateOnly('email', [
+                'email' => ['required', 'email:rfc,dns']
+            ]);
+        } elseif ($this->currentStep === 2) {
+            $this->validateOnly($propertyName, $this->getStep2Rules(), $this->getStep2Messages());
+        } elseif ($this->currentStep === 3) {
+            // Validate the password and confirmation matching in real-time
+            if ($propertyName === 'password' || $propertyName === 'password_confirmation') {
+                $this->validateOnly('password', $this->getStep3Rules());
+            }
+        }
+    }
+
     public function sendCode(): void
     {
         $this->validateOnly('email', [
-            'email' => ['required', 'email'],
+            'email' => ['required', 'email:rfc,dns'],
         ]);
 
         if (User::where('email', $this->email)->exists()) {
@@ -78,7 +97,6 @@ class RegisterWizard extends Component
         }
 
         $cooldown = $existing->secondsUntilResendAllowed();
-
         if ($cooldown > 0) {
             $this->resendCooldown = $cooldown;
             $this->addError('code', "Please wait {$cooldown}s before requesting a new code.");
@@ -114,13 +132,11 @@ class RegisterWizard extends Component
             ]
         );
 
-        // Deliberately NOT clearing $this->email here (per requirement: don't
-        // unnecessarily clear fields on failure/resend). $this->code IS reset
-        // because a brand new code was just issued, invalidating any old input.
         $this->code = '';
         $this->codeSent = true;
         $this->resendCooldown = RegistrationOtp::RESEND_COOLDOWN_SECONDS;
         $this->attemptsRemaining = RegistrationOtp::MAX_ATTEMPTS;
+
         $this->resetErrorBag();
     }
 
@@ -169,22 +185,41 @@ class RegisterWizard extends Component
         $this->resetErrorBag();
     }
 
-    public function goToPasswordStep(): void
+    // --- Validation Rules for Step 2 ---
+    protected function getStep2Rules(): array
     {
-        $this->validate([
+        return [
             'first_name' => ['required', 'string', 'regex:/^[A-Za-z\s]+$/'],
             'last_name' => ['required', 'string', 'regex:/^[A-Za-z\s]+$/'],
-            'middle_initial' => ['nullable', 'alpha', 'max:1'],
-            'sex' => ['required', 'in:male,female,other'],
+            'middle_initial' => ['nullable', 'string', 'regex:/^[A-Za-z]$/'],
+            'sex' => ['required', 'in:male,female'], // Removed 'other'
             'birthday' => [
                 'required',
                 'date',
-                'before_or_equal:'.Carbon::now()->subYears(18)->format('Y-m-d'),
+                // Dynamically ensure they are at least 18 and at most 100
+                'before_or_equal:' . now()->subYears(18)->format('Y-m-d'),
+                'after_or_equal:' . now()->subYears(100)->format('Y-m-d'),
             ],
-        ], [
-            'birthday.before_or_equal' => 'You must be at least 18 years old to register.',
-        ]);
+        ];
+    }
 
+    protected function getStep2Messages(): array
+    {
+        return [
+            'first_name.regex' => 'First name must contain only letters and spaces.',
+            'last_name.regex' => 'Last name must contain only letters and spaces.',
+            'middle_initial.regex' => 'Middle initial must be a single letter.',
+            'sex.required' => 'Please select an option.',
+            'sex.in' => 'Invalid selection.',
+            'birthday.before_or_equal' => 'You must be at least 18 years old to register.',
+            'birthday.after_or_equal' => 'Maximum allowed age is 100 years.',
+            'birthday.required' => 'Please provide a valid date of birth.',
+        ];
+    }
+
+    public function goToPasswordStep(): void
+    {
+        $this->validate($this->getStep2Rules(), $this->getStep2Messages());
         $this->currentStep = 3;
     }
 
@@ -195,14 +230,38 @@ class RegisterWizard extends Component
         }
     }
 
+    // --- Validation Rules for Step 3 ---
+    protected function getStep3Rules(): array
+    {
+        return [
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                function ($attribute, $value, $fail) {
+                    if (!preg_match('/[A-Z]/', $value)) {
+                        $fail('Password must contain at least 1 uppercase letter.');
+                    }
+                    if (!preg_match('/[0-9]/', $value)) {
+                        $fail('Password must contain at least 1 number.');
+                    }
+                    if (!preg_match('/[\W_]/', $value)) {
+                        $fail('Password must contain at least 1 special character.');
+                    }
+                },
+                'confirmed' // Matches with password_confirmation
+            ],
+        ];
+    }
+
     public function register(): void
     {
-        $this->validate([
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        // Strict backend validation before creation
+        $this->validate($this->getStep3Rules(), [
+            'password.confirmed' => 'The passwords do not match.',
+            'password.min' => 'Password must be at least 8 characters long.',
         ]);
 
-        // Re-verify server-side that this session's email verification is
-        // still valid — never trust the client-held step/token state alone.
         $record = RegistrationOtp::where('email', $this->email)
             ->where('verification_token', $this->verificationToken)
             ->first();
@@ -230,23 +289,14 @@ class RegisterWizard extends Component
                 'contact_no' => null,
                 'birthday' => $this->birthday,
                 'password' => Hash::make($this->password),
+                'role' => 'Buyer',
             ]);
 
             $record->delete();
-
             Auth::login($user);
         });
 
         $this->redirect(route('home'), navigate: false);
-    }
-
-    public function computedAge(): ?int
-    {
-        if (! $this->birthday) {
-            return null;
-        }
-
-        return Carbon::parse($this->birthday)->age;
     }
 
     public function render()

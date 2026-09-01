@@ -28,10 +28,12 @@
         <div class="w-full max-w-md mx-auto space-y-4 sm:space-y-5">
             <div>
                 <label class="block text-xs font-bold text-text-main mb-1">E-mail*</label>
-                <input type="email" wire:model="email" @if ($codeSent) disabled @endif
-                    class="w-full py-2 px-3 border-2 border-border-subtle rounded-xl bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all shadow-sm text-sm disabled:bg-surface-subtle disabled:text-text-muted"
+                <input type="email" wire:model.live.debounce.500ms="email" @if ($codeSent) disabled @endif
+                    class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm disabled:bg-surface-subtle disabled:text-text-muted 
+                    @error('email') border-danger focus:border-danger focus:ring-1 focus:ring-danger 
+                    @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror"
                     placeholder="you@example.com">
-                @error('email') <p class="text-danger text-xs mt-1">{{ $message }}</p> @enderror
+                @error('email') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
             </div>
 
             @if (! $codeSent)
@@ -44,9 +46,11 @@
                 <div>
                     <label class="block text-xs font-bold text-text-main mb-1">Verification Code*</label>
                     <input type="text" wire:model="code" inputmode="numeric" maxlength="6" autocomplete="one-time-code"
-                        class="w-full py-2 px-3 border-2 border-border-subtle rounded-xl bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all shadow-sm text-sm tracking-[0.5em] text-center font-bold"
+                        class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm tracking-[0.5em] text-center font-bold 
+                        @error('code') border-danger focus:border-danger focus:ring-1 focus:ring-danger 
+                        @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror"
                         placeholder="000000">
-                    @error('code') <p class="text-danger text-xs mt-1">{{ $message }}</p> @enderror
+                    @error('code') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
                     <p class="text-text-muted text-xs mt-1 text-center sm:text-left">We sent a 6-digit code to {{ $email }}.</p>
                 </div>
 
@@ -71,53 +75,67 @@
 
     {{-- STEP 2: Personal Info --}}
     @if ($currentStep === 2)
-        <div class="w-full max-w-2xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-5">
-            <div class="md:col-span-5">
-                <label class="block text-xs font-bold text-text-main mb-1">Last Name*</label>
-                <input type="text" wire:model="last_name"
-                    class="w-full py-2 px-3 border-2 border-border-subtle rounded-xl bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all shadow-sm text-sm"
-                    placeholder="Doe">
-                @error('last_name') <p class="text-danger text-xs mt-1">{{ $message }}</p> @enderror
-            </div>
-            <div class="md:col-span-5">
+        <div class="w-full max-w-md mx-auto space-y-4 sm:space-y-5">
+            <div>
                 <label class="block text-xs font-bold text-text-main mb-1">First Name*</label>
-                <input type="text" wire:model="first_name"
-                    class="w-full py-2 px-3 border-2 border-border-subtle rounded-xl bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all shadow-sm text-sm"
+                <input type="text" wire:model.live.debounce.500ms="first_name"
+                    class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm 
+                    @error('first_name') border-danger focus:border-danger focus:ring-1 focus:ring-danger 
+                    @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror"
                     placeholder="John">
-                @error('first_name') <p class="text-danger text-xs mt-1">{{ $message }}</p> @enderror
+                @error('first_name') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
             </div>
-            <div class="md:col-span-2">
+
+            <div>
+                <label class="block text-xs font-bold text-text-main mb-1">Last Name*</label>
+                <input type="text" wire:model.live.debounce.500ms="last_name"
+                    class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm 
+                    @error('last_name') border-danger focus:border-danger focus:ring-1 focus:ring-danger 
+                    @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror"
+                    placeholder="Doe">
+                @error('last_name') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
+            </div>
+
+            <div>
                 <label class="block text-xs font-bold text-text-main mb-1">M.I.</label>
-                <input type="text" wire:model="middle_initial" maxlength="1"
-                    class="w-full py-2 px-3 border-2 border-border-subtle rounded-xl bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all shadow-sm text-sm text-center uppercase"
+                <input type="text" wire:model.live.debounce.500ms="middle_initial" maxlength="1"
+                    class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm uppercase 
+                    @error('middle_initial') border-danger focus:border-danger focus:ring-1 focus:ring-danger 
+                    @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror"
                     placeholder="A">
-                @error('middle_initial') <p class="text-danger text-xs mt-1">{{ $message }}</p> @enderror
+                @error('middle_initial') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
             </div>
 
-            <div class="md:col-span-4">
+            <div>
                 <label class="block text-xs font-bold text-text-main mb-1">Sex*</label>
-                <select wire:model="sex"
-                    class="w-full py-2 px-3 border-2 border-border-subtle rounded-xl bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all shadow-sm text-sm appearance-none cursor-pointer">
-                    <option value="">Select...</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                </select>
-                @error('sex') <p class="text-danger text-xs mt-1">{{ $message }}</p> @enderror
-            </div>
-            <div class="md:col-span-4">
-                <label class="block text-xs font-bold text-text-main mb-1">Birthday*</label>
-                <input type="date" wire:model.live="birthday"
-                    class="w-full py-2 px-3 border-2 border-border-subtle rounded-xl bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all shadow-sm text-sm cursor-pointer text-text-muted">
-                @error('birthday') <p class="text-danger text-xs mt-1">{{ $message }}</p> @enderror
-            </div>
-            <div class="md:col-span-4">
-                <label class="block text-xs font-bold text-text-main mb-1">Age</label>
-                <input type="number" value="{{ $this->computedAge() }}" readonly
-                    class="w-full py-2 px-3 border-2 border-border-subtle rounded-xl bg-surface-subtle text-text-muted font-bold outline-none shadow-sm text-sm cursor-not-allowed"
-                    placeholder="Auto">
+                <div class="flex gap-4 mt-2">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" wire:model.live="sex" value="male" 
+                            class="w-4 h-4 text-text-main focus:ring-text-main cursor-pointer @error('sex') border-danger @else border-border-subtle @enderror">
+                        <span class="text-sm font-medium text-text-main">Male</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" wire:model.live="sex" value="female" 
+                            class="w-4 h-4 text-text-main focus:ring-text-main cursor-pointer @error('sex') border-danger @else border-border-subtle @enderror">
+                        <span class="text-sm font-medium text-text-main">Female</span>
+                    </label>
+                </div>
+                @error('sex') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
             </div>
 
-            <div class="md:col-span-12 flex gap-2 sm:gap-3 mt-2">
+            <div>
+                <label class="block text-xs font-bold text-text-main mb-1">Birthday*</label>
+                <!-- min/max explicitly blocks UI selection outside of 18-100 years old -->
+                <input type="date" wire:model.live="birthday"
+                    min="{{ now()->subYears(100)->format('Y-m-d') }}"
+                    max="{{ now()->subYears(18)->format('Y-m-d') }}"
+                    class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm cursor-pointer text-text-main 
+                    @error('birthday') border-danger focus:border-danger focus:ring-1 focus:ring-danger 
+                    @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror">
+                @error('birthday') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
+            </div>
+
+            <div class="flex gap-2 sm:gap-3 mt-4">
                 <button wire:click="backToStep(1)" type="button"
                     class="flex-1 py-2.5 sm:py-3 px-4 bg-surface-subtle hover:bg-border-subtle text-text-main text-sm font-bold rounded-xl transition-colors cursor-pointer">
                     Back
@@ -135,19 +153,25 @@
         <div class="w-full max-w-md mx-auto space-y-4 sm:space-y-5">
             <div>
                 <label class="block text-xs font-bold text-text-main mb-1">Password*</label>
-                <input type="password" wire:model="password"
-                    class="w-full py-2 px-3 border-2 border-border-subtle rounded-xl bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all shadow-sm text-sm"
+                <input type="password" wire:model.live.debounce.500ms="password"
+                    class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm 
+                    @error('password') border-danger focus:border-danger focus:ring-1 focus:ring-danger 
+                    @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror"
                     placeholder="••••••••">
-                @error('password') <p class="text-danger text-xs mt-1">{{ $message }}</p> @enderror
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-text-main mb-1">Confirm Password*</label>
-                <input type="password" wire:model="password_confirmation"
-                    class="w-full py-2 px-3 border-2 border-border-subtle rounded-xl bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all shadow-sm text-sm"
-                    placeholder="••••••••">
+                @error('password') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
             </div>
 
-            <div class="flex gap-2 sm:gap-3 mt-2">
+            <div>
+                <label class="block text-xs font-bold text-text-main mb-1">Confirm Password*</label>
+                <input type="password" wire:model.live.debounce.500ms="password_confirmation"
+                    class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm 
+                    @error('password_confirmation') border-danger focus:border-danger focus:ring-1 focus:ring-danger 
+                    @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror"
+                    placeholder="••••••••">
+                @error('password_confirmation') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
+            </div>
+
+            <div class="flex gap-2 sm:gap-3 mt-4">
                 <button wire:click="backToStep(2)" type="button"
                     class="flex-1 py-2.5 sm:py-3 px-4 bg-surface-subtle hover:bg-border-subtle text-text-main text-sm font-bold rounded-xl transition-colors cursor-pointer">
                     Back
