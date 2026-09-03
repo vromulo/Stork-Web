@@ -38,7 +38,7 @@
             @endforeach
         </div>
 
-        {{-- STEP 1: Email (Exact match to Buyer) --}}
+        {{-- STEP 1: Email --}}
         @if ($currentStep === 1)
             <div class="w-full max-w-md mx-auto space-y-4">
                 <div>
@@ -310,5 +310,13 @@
                 </div>
             </div>
         @endif
+
+        {{-- Already have an account link --}}
+        <div class="text-center mt-8 max-w-md mx-auto">
+            <p class="text-xs text-text-muted">
+                Already have an account? 
+                <a href="{{ route('seller.login') }}" wire:navigate class="font-bold text-primary hover:text-primary-dark hover:underline transition-colors">Sign in here</a>
+            </p>
+        </div>
     @endif
 </div>

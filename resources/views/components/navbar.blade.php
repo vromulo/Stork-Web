@@ -3,7 +3,7 @@
     <div class="hidden md:block py-1.5 text-xs text-surface bg-primary-dark font-sans">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <a href="{{ route('seller.register') }}" class="hover:text-brand-light hover:underline transition-colors">Start Selling</a>
+                <a href="{{ route('seller.login') }}" class="hover:text-brand-light hover:underline transition-colors">Start Selling</a>
                 <span class="text-surface-subtle opacity-70">|</span>
                 <a href="#" class="hover:text-brand-light hover:underline transition-colors">Join the Logistics Team</a>
             </div>
