@@ -1,4 +1,5 @@
 <nav class="bg-surface sticky top-0 z-50 font-sans">
+    @guest
     <!-- Top notification bar: Hidden on mobile using 'hidden md:block' -->
     <div class="hidden md:block py-1.5 text-xs text-surface bg-primary-dark font-sans">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -14,6 +15,7 @@
             </div>
         </div>
     </div>
+    @endguest
 
     <div class="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
