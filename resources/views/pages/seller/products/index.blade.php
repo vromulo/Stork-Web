@@ -12,6 +12,16 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; } 
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; } 
         .custom-scrollbar:hover::-webkit-scrollbar-thumb { background: #9ca3af; }
+        
+        /* Cross-browser CSS to hide the up/down number arrows */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield; /* Firefox */
+        }
     </style>
 </head>
 <body class="m-0 p-0 h-screen w-screen font-sans antialiased text-text-main overflow-hidden bg-gradient-to-b from-surface via-surface to-brand-light/30">
@@ -80,9 +90,10 @@
                                         selectedSub: null,
                                         basePrice: {{ $product->price ?? 0 }},
                                         discountPercent: {{ $product->discount ?? 0 }},
+                                        defaultImage: '{{ (!empty($product->pictures) && is_array($product->pictures)) ? asset('storage/' . $product->pictures[0]) : '' }}',
                                         activeImage: '{{ (!empty($product->pictures) && is_array($product->pictures)) ? asset('storage/' . $product->pictures[0]) : '' }}',
                                         activePrice: {{ $product->price ?? 0 }},
-                                        get discountedPrice() {
+                                        get editDiscountedPrice() {
                                             let p = this.basePrice - (this.basePrice * (this.discountPercent / 100));
                                             return p > 0 ? p.toFixed(2) : 0;
                                         }
@@ -180,17 +191,18 @@
                                                             <h1 class="text-3xl font-extrabold text-primary-dark mb-3 leading-tight">{{ $product->name }}</h1>
                                                             
                                                             <div class="flex items-end gap-3 bg-brand-light/10 p-5 rounded-2xl border border-brand-light/30 shadow-sm">
-                                                                @if($product->discount > 0)
+                                                                <template x-if="discountPercent > 0">
                                                                     <div class="flex flex-col">
                                                                         <div class="flex items-center gap-2 mb-1">
-                                                                            <span class="text-lg line-through text-text-muted">₱{{ number_format($product->price, 2) }}</span>
-                                                                            <span class="px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-bold rounded-md tracking-wider uppercase">{{ $product->discount }}% OFF</span>
+                                                                            <span class="text-lg line-through text-text-muted" x-text="'₱' + activePrice.toFixed(2)"></span>
+                                                                            <span class="px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-bold rounded-md tracking-wider uppercase" x-text="discountPercent + '% OFF'"></span>
                                                                         </div>
-                                                                        <span class="text-4xl font-extrabold text-red-500">₱{{ number_format($product->price - ($product->price * ($product->discount / 100)), 2) }}</span>
+                                                                        <span class="text-4xl font-extrabold text-red-500" x-text="'₱' + (activePrice - (activePrice * (discountPercent / 100))).toFixed(2)"></span>
                                                                     </div>
-                                                                @else
-                                                                    <span class="text-4xl font-extrabold text-red-500">₱<span x-text="activePrice.toFixed(2)"></span></span>
-                                                                @endif
+                                                                </template>
+                                                                <template x-if="discountPercent <= 0">
+                                                                    <span class="text-4xl font-extrabold text-red-500" x-text="'₱' + activePrice.toFixed(2)"></span>
+                                                                </template>
                                                             </div>
                                                         </div>
 
@@ -203,15 +215,18 @@
                                                                     <div class="flex flex-wrap gap-2">
                                                                         @foreach($product->variants['items'] as $vIndex => $item)
                                                                             <button @click.stop="
-                                                                                        selectedMain = selectedMain === {{ $vIndex }} ? null : {{ $vIndex }};
-                                                                                        selectedSub = null;
-                                                                                        if(selectedMain !== null) {
+                                                                                        if (selectedMain === {{ $vIndex }}) {
+                                                                                            selectedMain = null;
+                                                                                            selectedSub = null;
+                                                                                            activePrice = basePrice;
+                                                                                            activeImage = defaultImage;
+                                                                                        } else {
+                                                                                            selectedMain = {{ $vIndex }};
+                                                                                            selectedSub = null;
                                                                                             activePrice = {{ $item['price'] ?? $product->price }};
                                                                                             @if(isset($item['image']) && $item['image'])
                                                                                                 activeImage = '{{ asset('storage/' . $item['image']) }}';
                                                                                             @endif
-                                                                                        } else {
-                                                                                            activePrice = {{ $product->price }};
                                                                                         }
                                                                                     "
                                                                                     :class="selectedMain === {{ $vIndex }} ? 'bg-primary text-white border-primary shadow-md' : 'bg-surface text-text-main border-border-subtle hover:border-primary hover:bg-brand-light/10'"
@@ -230,8 +245,21 @@
                                                                         <div class="flex flex-wrap gap-2">
                                                                             @foreach($item['subs'] as $sIndex => $sub)
                                                                                 <button @click.stop="
-                                                                                            selectedSub = {{ $sIndex }}; 
-                                                                                            activePrice = {{ $sub['price'] ?? ($item['price'] ?? $product->price) }}
+                                                                                            if (selectedSub === {{ $sIndex }}) {
+                                                                                                selectedSub = null;
+                                                                                                activePrice = {{ $item['price'] ?? $product->price }};
+                                                                                                @if(isset($item['image']) && $item['image'])
+                                                                                                    activeImage = '{{ asset('storage/' . $item['image']) }}';
+                                                                                                @else
+                                                                                                    activeImage = defaultImage;
+                                                                                                @endif
+                                                                                            } else {
+                                                                                                selectedSub = {{ $sIndex }}; 
+                                                                                                activePrice = {{ $sub['price'] ?? ($item['price'] ?? $product->price) }};
+                                                                                                @if(isset($sub['image']) && $sub['image'])
+                                                                                                    activeImage = '{{ asset('storage/' . $sub['image']) }}';
+                                                                                                @endif
+                                                                                            }
                                                                                         " 
                                                                                         :class="selectedSub === {{ $sIndex }} ? 'bg-primary text-white border-primary shadow-md' : 'bg-surface text-text-main border-border-subtle hover:border-primary hover:bg-brand-light/10'"
                                                                                         class="px-4 py-2 border-2 rounded-xl text-sm font-bold transition-all cursor-pointer">
@@ -296,7 +324,7 @@
                                                         </div>
                                                         <div class="flex justify-between items-center">
                                                             <span class="text-primary font-bold">New Discounted Price:</span>
-                                                            <span class="text-xl font-bold text-red-500">₱<span x-text="discountedPrice"></span></span>
+                                                            <span class="text-xl font-bold text-red-500">₱<span x-text="editDiscountedPrice"></span></span>
                                                         </div>
                                                     </div>
 

@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
     <!-- Alpine.js & Custom Styles -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
@@ -14,15 +13,12 @@
         }
     </style>
 
-    <!-- Main Wrapper (Controls Alpine state for child components) -->
-    <div x-data="{ selectedCategory: 'Women', modalOpen: false, activeProduct: null }"
-         @filter-category.window="selectedCategory = $event.detail"
-         class="bg-surface font-sans antialiased text-text-main overflow-x-hidden min-h-screen">
+    <div x-data="{ modalOpen: false, activeProduct: null }" class="bg-surface font-sans antialiased text-text-main overflow-x-hidden min-h-screen">
         
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in-up">
             
             <!-- Hero Banner -->
-            <div class="relative bg-gradient-to-r from-brand-light/60 to-surface-subtle rounded-3xl overflow-hidden mb-8 shadow-sm border border-border-subtle h-[350px] flex items-center">
+            <div class="relative bg-gradient-to-r from-brand-light/60 to-surface-subtle rounded-3xl overflow-hidden mb-12 shadow-sm border border-border-subtle h-[350px] flex items-center">
                 <div class="absolute -right-20 -top-20 w-[500px] h-[500px] bg-secondary opacity-10 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="relative z-10 p-10 md:p-16 w-full md:w-2/3">
                     <h1 class="text-4xl md:text-6xl font-serif text-primary-dark font-bold leading-tight mb-4">
@@ -35,34 +31,17 @@
                 </div>
             </div>
 
-            <!-- Home-Specific Category Filter -->
-            <div class="mt-4 mb-4 w-full overflow-x-auto pb-2 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-                <div class="flex items-center justify-center space-x-8 md:space-x-12 px-4 md:px-0">
-                    @php
-                        $homeCategories = ['Women', 'Men', 'Kids', 'Home & Garden', 'Health & Beauty'];
-                    @endphp
-                    
-                    @foreach($homeCategories as $category)
-                        <button 
-                            @click="selectedCategory = '{{ addslashes($category) }}'"
-                            :class="selectedCategory === '{{ addslashes($category) }}' 
-                                ? 'text-primary font-medium underline underline-offset-8 decoration-2' 
-                                : 'text-text-muted font-extralight hover:text-primary transition-colors'"
-                            class="flex-shrink-0 text-lg md:text-xl transition-all duration-200 whitespace-nowrap focus:outline-none">
-                            {{ $category }}
-                        </button>
-                    @endforeach
-                </div>
+            <!-- Products Grid Component -->
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                @forelse($products as $product)
+                    <x-seller-product-card :product="$product" />
+                @empty
+                    <div class="col-span-full text-center py-12 text-gray-500">
+                        No products available at the moment.
+                    </div>
+                @endforelse
             </div>
 
-            <!-- Products Component -->
-            <x-product-card :products="$products" />
-
         </div>
-
-        <!-- Modal Component -->
-        <x-product-modal />
-
     </div>
-
-@endsection
+@endsection 

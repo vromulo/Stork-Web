@@ -11,6 +11,7 @@ use App\Http\Controllers\SellerController;
 use App\Http\Controllers\SellerProductController;
 use App\Http\Controllers\LogisticsController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController; // Added this import
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('guest')->group(function () {
@@ -27,7 +28,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
+// Buyer / Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/product/{product}', [ProductController::class, 'show'])->name('product.show'); // New product detail route
 Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('category.show');
 
 Route::middleware('guest')->group(function () {
