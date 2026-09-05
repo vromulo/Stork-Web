@@ -52,6 +52,22 @@ class RegisterWizard extends Component
             // Validate the password and confirmation matching in real-time
             if ($propertyName === 'password' || $propertyName === 'password_confirmation') {
                 $this->validateOnly('password', $this->getStep3Rules());
+
+                // Only re-check confirmation if the user has already started typing into it
+                if (!empty($this->password_confirmation)) {
+                    $this->validateOnly('password_confirmation', [
+                        'password_confirmation' => ['same:password']
+                    ], [
+                        'password_confirmation.same' => 'The password confirmation does not match.'
+                    ]);
+                }
+            } elseif ($propertyName === 'password_confirmation') {
+                $this->validateOnly('password_confirmation', [
+                    'password_confirmation' => ['required', 'same:password']
+                ], [
+                    'password_confirmation.required' => 'Please confirm your password.',
+                    'password_confirmation.same' => 'The password confirmation does not match.'
+                ]);
             }
         }
     }
@@ -249,8 +265,8 @@ class RegisterWizard extends Component
                         $fail('Password must contain at least 1 special character.');
                     }
                 },
-                'confirmed' // Matches with password_confirmation
             ],
+            'password_confirmation' => ['required', 'same:password'],
         ];
     }
 
@@ -258,7 +274,7 @@ class RegisterWizard extends Component
     {
         // Strict backend validation before creation
         $this->validate($this->getStep3Rules(), [
-            'password.confirmed' => 'The passwords do not match.',
+            'password_confirmation.same' => 'The password confirmation does not match.',
             'password.min' => 'Password must be at least 8 characters long.',
         ]);
 

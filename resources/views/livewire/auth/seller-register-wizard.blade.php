@@ -66,32 +66,69 @@
         {{-- STEP 2: Personal Info --}}
         @if ($currentStep === 2)
             <div class="w-full max-w-md mx-auto space-y-4">
+
+                {{-- First Name --}}
                 <div>
                     <label class="block text-xs font-bold text-text-main mb-1">First Name*</label>
-                    <input type="text" wire:model.live="first_name" class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none text-sm @error('first_name') border-danger focus:border-danger focus:ring-1 focus:ring-danger @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror">
+                    <input type="text" 
+                        wire:model.live.debounce.500ms="first_name" 
+                        x-on:input="$event.target.value = $event.target.value.replace(/\b\w/g, c => c.toUpperCase())"
+                        class="capitalize w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none text-sm @error('first_name') border-danger focus:border-danger focus:ring-1 focus:ring-danger @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror">
                     @error('first_name') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
                 </div>
+
+                {{-- Last Name --}}
                 <div>
                     <label class="block text-xs font-bold text-text-main mb-1">Last Name*</label>
-                    <input type="text" wire:model.live="last_name" class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none text-sm @error('last_name') border-danger @else border-border-subtle focus:border-text-main @enderror">
+                    <input type="text" 
+                        wire:model.live="last_name" 
+                        x-on:input="$event.target.value = $event.target.value.replace(/\b\w/g, c => c.toUpperCase())"
+                        class="capitalize w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none text-sm @error('last_name') border-danger focus:border-danger focus:ring-1 focus:ring-danger @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror">
                     @error('last_name') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
                 </div>
+
+                {{-- Middle Initial --}}
+                <div>
+                    <label class="block text-xs font-bold text-text-main mb-1">M.I.</label>
+                    <input type="text" 
+                        wire:model.live.debounce.500ms="middle_initial" 
+                        maxlength="1" 
+                        x-on:input="$event.target.value = $event.target.value.toUpperCase()"
+                        class="uppercase w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none text-sm @error('middle_initial') border-danger focus:border-danger focus:ring-1 focus:ring-danger @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror">
+                    @error('middle_initial') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
+                </div>
+
+                {{-- Sex --}}
                 <div>
                     <label class="block text-xs font-bold text-text-main mb-1">Sex*</label>
                     <div class="flex gap-4 mt-2">
-                        <label class="flex items-center gap-2"><input type="radio" wire:model.live="sex" value="male" class="w-4 h-4 text-text-main focus:ring-text-main border-border-subtle"><span class="text-sm font-medium">Male</span></label>
-                        <label class="flex items-center gap-2"><input type="radio" wire:model.live="sex" value="female" class="w-4 h-4 text-text-main focus:ring-text-main border-border-subtle"><span class="text-sm font-medium">Female</span></label>
+                        <label class="flex items-center gap-2">
+                            <input type="radio" wire:model.live="sex" value="male" 
+                                class="w-4 h-4 text-text-main focus:ring-text-main border-border-subtle">
+                            <span class="text-sm font-medium">Male</span>
+                        </label>
+                        <label class="flex items-center gap-2">
+                            <input type="radio" wire:model.live="sex" value="female" 
+                                class="w-4 h-4 text-text-main focus:ring-text-main border-border-subtle">
+                            <span class="text-sm font-medium">Female</span>
+                        </label>
                     </div>
                     @error('sex') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
                 </div>
+
+                {{-- Birthday --}}
                 <div>
                     <label class="block text-xs font-bold text-text-main mb-1">Birthday*</label>
-                    <input type="date" wire:model.live="birthday" min="{{ now()->subYears(100)->format('Y-m-d') }}" max="{{ now()->subYears(18)->format('Y-m-d') }}" class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none text-sm @error('birthday') border-danger @else border-border-subtle focus:border-text-main @enderror">
+                    <input type="date" 
+                        wire:model.live="birthday" 
+                        min="{{ now()->subYears(100)->format('Y-m-d') }}" 
+                        max="{{ now()->subYears(18)->format('Y-m-d') }}" 
+                        class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none text-sm @error('birthday') border-danger focus:border-danger focus:ring-1 focus:ring-danger @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror">
                     @error('birthday') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
                 </div>
                 <div class="flex gap-3 mt-6">
-                    <button wire:click="backToStep(1)" class="flex-1 py-2.5 px-4 bg-surface-subtle hover:bg-border-subtle text-text-main text-sm font-bold rounded-xl transition-colors">Back</button>
-                    <button wire:click="nextStep(2)" class="flex-[2] py-2.5 px-4 bg-primary hover:bg-primary-dark text-surface text-sm font-bold rounded-xl transition-colors">Continue</button>
+                    <button wire:click="backToStep(1)" class="flex-1 py-2.5 px-4 bg-surface-subtle hover:bg-border-subtle text-text-main text-sm font-bold rounded-xl transition-colors cursor-pointer">Back</button>
+                    <button wire:click="nextStep(2)" class="flex-[2] py-2.5 px-4 bg-primary hover:bg-primary-dark text-surface text-sm font-bold rounded-xl transition-colors cursor-pointer">Continue</button>
                 </div>
             </div>
         @endif
@@ -99,56 +136,99 @@
         {{-- STEP 3: Contact & Address --}}
         @if ($currentStep === 3)
             <div class="w-full max-w-md mx-auto space-y-4">
+                
+                {{-- Contact No. --}}
                 <div>
                     <label class="block text-xs font-bold text-text-main mb-1">Contact No.*</label>
-                    <input type="text" wire:model.live="contact_no" placeholder="09xxxxxxxxx" class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none text-sm @error('contact_no') border-danger @else border-border-subtle focus:border-text-main @enderror">
+                    <div class="flex items-center w-full border-2 rounded-xl bg-surface transition-all shadow-sm overflow-hidden 
+                        @error('contact_no') border-danger focus-within:border-danger focus-within:ring-1 focus-within:ring-danger 
+                        @else border-border-subtle focus-within:border-text-main focus-within:ring-1 focus-within:ring-text-main @enderror">
+
+                        <span class="pl-3 pr-2 text-sm font-bold text-text-muted select-none border-r border-border-subtle bg-surface-subtle py-2">
+                            +63
+                        </span>
+
+                        <input type="text" 
+                            wire:model.live="contact_no" 
+                            maxlength="12"
+                            inputmode="numeric"
+                            x-on:input="
+                                let val = $event.target.value.replace(/\D/g, '').slice(0, 10);
+                                let formatted = '';
+                                if (val.length > 0) formatted = val.slice(0, 3);
+                                if (val.length > 3) formatted += ' ' + val.slice(3, 6);
+                                if (val.length > 6) formatted += ' ' + val.slice(6, 10);
+                                $event.target.value = formatted;
+                            "
+                            class="w-full py-2 px-3 bg-transparent outline-none text-sm text-text-main">
+                    </div>
                     @error('contact_no') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
                 </div>
+
+                {{-- Province --}}
                 <div>
                     <label class="block text-xs font-bold text-text-main mb-1">Province*</label>
-                    <div class="relative">
-                        <select wire:model.live="province_code" class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none text-sm appearance-none @error('province_code') border-danger @else border-border-subtle focus:border-text-main @enderror">
-                            <option value="">Select Province</option>
-                            @foreach($provinces as $prov) <option value="{{ $prov['code'] }}">{{ $prov['name'] }}</option> @endforeach
-                        </select>
-                        <div wire:loading wire:target="loadProvinces" class="absolute right-3 top-2.5 text-primary text-xs font-bold">Loading...</div>
-                    </div>
+                    <x-searchable-select 
+                        wire:model.live="province_code"
+                        :options="$provinces"
+                        placeholder="Select Province"
+                        value-key="code"
+                        label-key="name"
+                        loading-target="loadProvinces"
+                        :hasError="$errors->has('province_code')"
+                    />
                     @error('province_code') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
                 </div>
+
+                {{-- Municipality --}}
                 <div>
                     <label class="block text-xs font-bold text-text-main mb-1">Municipality*</label>
-                    <div class="relative">
-                        <select wire:model.live="municipality_code" class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none text-sm appearance-none @error('municipality_code') border-danger @else border-border-subtle focus:border-text-main @enderror" @if(empty($municipalities)) disabled @endif>
-                            <option value="">Select Municipality</option>
-                            @foreach($municipalities as $mun) <option value="{{ $mun['code'] }}">{{ $mun['name'] }}</option> @endforeach
-                        </select>
-                        <div wire:loading wire:target="province_code" class="absolute right-3 top-2.5 text-primary text-xs font-bold">Loading...</div>
-                    </div>
+                    <x-searchable-select 
+                        wire:model.live="municipality_code"
+                        :options="$municipalities"
+                        placeholder="Select Municipality"
+                        value-key="code"
+                        label-key="name"
+                        loading-target="province_code"
+                        :disabled="empty($municipalities)"
+                        :hasError="$errors->has('municipality_code')"
+                    />
                     @error('municipality_code') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
                 </div>
+
+                {{-- Barangay --}}
                 <div>
                     <label class="block text-xs font-bold text-text-main mb-1">Barangay*</label>
-                    <div class="relative">
-                        <select wire:model.live="barangay_code" class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none text-sm appearance-none @error('barangay_code') border-danger @else border-border-subtle focus:border-text-main @enderror" @if(empty($barangays)) disabled @endif>
-                            <option value="">Select Barangay</option>
-                            @foreach($barangays as $brgy) <option value="{{ $brgy['code'] }}">{{ $brgy['name'] }}</option> @endforeach
-                        </select>
-                        <div wire:loading wire:target="municipality_code" class="absolute right-3 top-2.5 text-primary text-xs font-bold">Loading...</div>
-                    </div>
+                    <x-searchable-select 
+                        wire:model.live="barangay_code"
+                        :options="$barangays"
+                        placeholder="Select Barangay"
+                        value-key="code"
+                        label-key="name"
+                        loading-target="municipality_code"
+                        :disabled="empty($barangays)"
+                        :hasError="$errors->has('barangay_code')"
+                    />
                     @error('barangay_code') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
                 </div>
+
+                {{-- Street --}}
                 <div>
                     <label class="block text-xs font-bold text-text-main mb-1">Street</label>
                     <input type="text" wire:model="street" class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none text-sm border-border-subtle focus:border-text-main">
                 </div>
+
+                {{-- House/Unit/Building Details --}}
                 <div>
                     <label class="block text-xs font-bold text-text-main mb-1">House/Unit/Building Details</label>
                     <input type="text" wire:model="house_details" class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none text-sm border-border-subtle focus:border-text-main">
                 </div>
+
                 <div class="flex gap-3 mt-6">
                     <button wire:click="backToStep(2)" class="flex-1 py-2.5 px-4 bg-surface-subtle hover:bg-border-subtle text-text-main text-sm font-bold rounded-xl transition-colors">Back</button>
                     <button wire:click="nextStep(3)" class="flex-[2] py-2.5 px-4 bg-primary hover:bg-primary-dark text-surface text-sm font-bold rounded-xl transition-colors">Continue</button>
                 </div>
+
             </div>
         @endif
 
@@ -162,15 +242,19 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-text-main mb-1">Line of Business/Category*</label>
-                    <select wire:model.live="line_of_business" class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none text-sm @error('line_of_business') border-danger @else border-border-subtle focus:border-text-main @enderror">
-                        <option value="">Select Category</option>
-                        <option value="Fashion & Apparel">Fashion & Apparel</option>
-                        <option value="Electronics">Electronics</option>
-                        <option value="Home & Living">Home & Living</option>
-                        <option value="Health & Beauty">Health & Beauty</option>
-                        <option value="Food & Beverages">Food & Beverages</option>
-                        <option value="Other">Other</option>
-                    </select>
+                    <x-searchable-select 
+                        wire:model.live="line_of_business"
+                        :options="[
+                            'Pet', 'Kids', 
+                            'Electronics', 'Home & Garden', 
+                            'Women\'s', 'Men\'s',
+                            'Health & Beauty', 'Books & Media',
+                            'Sports & Outdoors', 'Food & Gourmet',
+                            'Furniture & Office', 'Jewelry & Watches'
+                        ]"
+                        placeholder="Select Category"
+                        :hasError="$errors->has('line_of_business')"
+                    />
                     @error('line_of_business') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
                 </div>
                 <div class="flex gap-3 mt-6">
@@ -183,40 +267,203 @@
         {{-- STEP 5: Required Documents --}}
         @if ($currentStep === 5)
             <div class="w-full max-w-md mx-auto space-y-6">
-                <!-- Valid ID -->
+
+                <!-- Valid ID Dropzone -->
                 <div>
                     <label class="block text-xs font-bold text-text-main mb-2">Upload Valid ID* (JPG, PNG, PDF - Max 5MB)</label>
-                    <div class="flex items-center justify-center w-full">
-                        <label for="dropzone-id" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl cursor-pointer hover:bg-surface-subtle @error('valid_id') border-danger @else border-border-subtle @enderror">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                <svg class="w-6 h-6 mb-2 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                                <p class="mb-1 text-sm text-text-muted"><span class="font-bold">Click to upload</span> or drag and drop</p>
+                    <div 
+                        x-data="{ isDropping: false }"
+                        @dragover.prevent="isDropping = true"
+                        @dragleave.prevent="isDropping = false"
+                        @drop.prevent="
+                            isDropping = false;
+                            if ($event.dataTransfer.files.length > 0) {
+                                $refs.validIdInput.files = $event.dataTransfer.files;
+                                $refs.validIdInput.dispatchEvent(new Event('change', { bubbles: true }));
+                            }
+                        "
+                        :class="isDropping ? 'border-primary bg-brand-light/20 scale-[1.01]' : 'border-border-subtle bg-surface'"
+                        class="relative w-full rounded-2xl border-2 border-dashed transition-all duration-200 overflow-hidden shadow-sm hover:border-text-main/40 @error('valid_id') border-danger @enderror"
+                    >
+                        <!-- Uploading Overlay Spinner -->
+                        <div 
+                            wire:loading.flex 
+                            wire:target="valid_id" 
+                            class="absolute inset-0 z-20 bg-surface/90 backdrop-blur-xs flex-col items-center justify-center space-y-2 p-4"
+                        >
+                            <svg class="animate-spin h-7 w-7 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                            </svg>
+                            <p class="text-xs font-bold text-primary-dark animate-pulse">Uploading Valid ID...</p>
+                        </div>
+
+                        <!-- Uploaded Preview Box -->
+                        @if ($valid_id)
+                            <div class="p-4 flex items-center justify-between gap-3 bg-surface-subtle">
+                                <div class="flex items-center gap-3 overflow-hidden">
+                                    @php
+                                        $extension = strtolower(pathinfo($valid_id->getClientOriginalName(), PATHINFO_EXTENSION));
+                                    @endphp
+
+                                    @if(in_array($extension, ['jpg', 'jpeg', 'png', 'webp']))
+                                        <img src="{{ $valid_id->temporaryUrl() }}" alt="Valid ID" class="w-14 h-14 object-cover rounded-xl border border-border-subtle shrink-0 shadow-xs">
+                                    @else
+                                        <div class="w-14 h-14 rounded-xl bg-danger/10 text-danger flex items-center justify-center shrink-0 border border-danger/20">
+                                            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                            </svg>
+                                        </div>
+                                    @endif
+
+                                    <div class="truncate">
+                                        <p class="text-xs font-bold text-text-main truncate" title="{{ $valid_id->getClientOriginalName() }}">
+                                            {{ $valid_id->getClientOriginalName() }}
+                                        </p>
+                                        <div class="flex items-center gap-2 mt-1">
+                                            <span class="text-[10px] text-text-muted font-medium">
+                                                {{ round($valid_id->getSize() / 1024, 1) }} KB
+                                            </span>
+                                            <span class="text-[10px] text-success font-bold flex items-center gap-0.5">
+                                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                                Ready
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <label for="dropzone-id" class="text-xs font-bold text-primary hover:text-primary-dark cursor-pointer underline shrink-0 px-2 py-1">
+                                    Change
+                                </label>
                             </div>
-                            <input id="dropzone-id" type="file" wire:model="valid_id" class="hidden" accept=".jpg,.jpeg,.png,.pdf" />
-                        </label>
+                        @else
+                            <!-- Empty Dropzone State -->
+                            <label for="dropzone-id" class="flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:bg-surface-subtle transition-colors">
+                                <div class="w-12 h-12 rounded-full bg-brand-light/30 flex items-center justify-center mb-3 text-primary">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                    </svg>
+                                </div>
+                                <p class="text-xs text-text-main font-semibold mb-1">
+                                    <span class="text-primary font-bold">Click to upload</span> or drag and drop
+                                </p>
+                                <p class="text-[10px] text-text-muted">PNG, JPG, or PDF up to 5MB</p>
+                            </label>
+                        @endif
+
+                        <input 
+                            id="dropzone-id" 
+                            x-ref="validIdInput"
+                            type="file" 
+                            wire:model="valid_id" 
+                            class="hidden" 
+                            accept=".jpg,.jpeg,.png,.pdf" 
+                        />
                     </div>
-                    @if ($valid_id) <p class="text-xs text-success mt-2 font-bold flex items-center"><svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> File attached: {{ $valid_id->getClientOriginalName() }}</p> @endif
                     @error('valid_id') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
                 </div>
 
-                <!-- Business Permit -->
+                <!-- Business Permit Dropzone -->
                 <div>
                     <label class="block text-xs font-bold text-text-main mb-2">Upload Business Permit* (JPG, PNG, PDF - Max 5MB)</label>
-                    <div class="flex items-center justify-center w-full">
-                        <label for="dropzone-permit" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl cursor-pointer hover:bg-surface-subtle @error('business_permit') border-danger @else border-border-subtle @enderror">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                <svg class="w-6 h-6 mb-2 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                                <p class="mb-1 text-sm text-text-muted"><span class="font-bold">Click to upload</span> or drag and drop</p>
+                    <div 
+                        x-data="{ isDropping: false }"
+                        @dragover.prevent="isDropping = true"
+                        @dragleave.prevent="isDropping = false"
+                        @drop.prevent="
+                            isDropping = false;
+                            if ($event.dataTransfer.files.length > 0) {
+                                $refs.permitInput.files = $event.dataTransfer.files;
+                                $refs.permitInput.dispatchEvent(new Event('change', { bubbles: true }));
+                            }
+                        "
+                        :class="isDropping ? 'border-primary bg-brand-light/20 scale-[1.01]' : 'border-border-subtle bg-surface'"
+                        class="relative w-full rounded-2xl border-2 border-dashed transition-all duration-200 overflow-hidden shadow-sm hover:border-text-main/40 @error('business_permit') border-danger @enderror"
+                    >
+                        <!-- Uploading Overlay Spinner -->
+                        <div 
+                            wire:loading.flex 
+                            wire:target="business_permit" 
+                            class="absolute inset-0 z-20 bg-surface/90 backdrop-blur-xs flex-col items-center justify-center space-y-2 p-4"
+                        >
+                            <svg class="animate-spin h-7 w-7 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                            </svg>
+                            <p class="text-xs font-bold text-primary-dark animate-pulse">Uploading Business Permit...</p>
+                        </div>
+
+                        <!-- Uploaded Preview Box -->
+                        @if ($business_permit)
+                            <div class="p-4 flex items-center justify-between gap-3 bg-surface-subtle">
+                                <div class="flex items-center gap-3 overflow-hidden">
+                                    @php
+                                        $extensionPermit = strtolower(pathinfo($business_permit->getClientOriginalName(), PATHINFO_EXTENSION));
+                                    @endphp
+
+                                    @if(in_array($extensionPermit, ['jpg', 'jpeg', 'png', 'webp']))
+                                        <img src="{{ $business_permit->temporaryUrl() }}" alt="Business Permit" class="w-14 h-14 object-cover rounded-xl border border-border-subtle shrink-0 shadow-xs">
+                                    @else
+                                        <div class="w-14 h-14 rounded-xl bg-danger/10 text-danger flex items-center justify-center shrink-0 border border-danger/20">
+                                            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                            </svg>
+                                        </div>
+                                    @endif
+
+                                    <div class="truncate">
+                                        <p class="text-xs font-bold text-text-main truncate" title="{{ $business_permit->getClientOriginalName() }}">
+                                            {{ $business_permit->getClientOriginalName() }}
+                                        </p>
+                                        <div class="flex items-center gap-2 mt-1">
+                                            <span class="text-[10px] text-text-muted font-medium">
+                                                {{ round($business_permit->getSize() / 1024, 1) }} KB
+                                            </span>
+                                            <span class="text-[10px] text-success font-bold flex items-center gap-0.5">
+                                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                                Ready
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <label for="dropzone-permit" class="text-xs font-bold text-primary hover:text-primary-dark cursor-pointer underline shrink-0 px-2 py-1">
+                                    Change
+                                </label>
                             </div>
-                            <input id="dropzone-permit" type="file" wire:model="business_permit" class="hidden" accept=".jpg,.jpeg,.png,.pdf" />
-                        </label>
+                        @else
+                            <!-- Empty Dropzone State -->
+                            <label for="dropzone-permit" class="flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:bg-surface-subtle transition-colors">
+                                <div class="w-12 h-12 rounded-full bg-brand-light/30 flex items-center justify-center mb-3 text-primary">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                    </svg>
+                                </div>
+                                <p class="text-xs text-text-main font-semibold mb-1">
+                                    <span class="text-primary font-bold">Click to upload</span> or drag and drop
+                                </p>
+                                <p class="text-[10px] text-text-muted">PNG, JPG, or PDF up to 5MB</p>
+                            </label>
+                        @endif
+
+                        <input 
+                            id="dropzone-permit" 
+                            x-ref="permitInput"
+                            type="file" 
+                            wire:model="business_permit" 
+                            class="hidden" 
+                            accept=".jpg,.jpeg,.png,.pdf" 
+                        />
                     </div>
-                    @if ($business_permit) <p class="text-xs text-success mt-2 font-bold flex items-center"><svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> File attached: {{ $business_permit->getClientOriginalName() }}</p> @endif
                     @error('business_permit') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
                 </div>
+
+                <!-- Navigation Buttons -->
                 <div class="flex gap-3 mt-6">
-                    <button wire:click="backToStep(4)" class="flex-1 py-2.5 px-4 bg-surface-subtle hover:bg-border-subtle text-text-main text-sm font-bold rounded-xl transition-colors">Back</button>
-                    <button wire:click="nextStep(5)" wire:loading.attr="disabled" class="flex-[2] py-2.5 px-4 bg-primary hover:bg-primary-dark text-surface text-sm font-bold rounded-xl transition-colors">
+                    <button wire:click="backToStep(4)" class="flex-1 py-2.5 px-4 bg-surface-subtle hover:bg-border-subtle text-text-main text-sm font-bold rounded-xl transition-colors cursor-pointer">
+                        Back
+                    </button>
+                    <button wire:click="nextStep(5)" wire:loading.attr="disabled" class="flex-[2] py-2.5 px-4 bg-primary hover:bg-primary-dark text-surface text-sm font-bold rounded-xl transition-colors cursor-pointer disabled:opacity-60">
                         <span wire:loading.remove wire:target="valid_id, business_permit">Continue</span>
                         <span wire:loading wire:target="valid_id, business_permit">Uploading...</span>
                     </button>
@@ -226,19 +473,68 @@
 
         {{-- STEP 6: Password --}}
         @if ($currentStep === 6)
-            <div class="w-full max-w-md mx-auto space-y-4">
+            <div class="w-full max-w-md mx-auto space-y-4" x-data="{ showPass: false, showConfirm: false }">
+                
+                {{-- Password Input --}}
                 <div>
                     <label class="block text-xs font-bold text-text-main mb-1">Password*</label>
-                    <input type="password" wire:model.live.debounce.500ms="password" class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none text-sm @error('password') border-danger @else border-border-subtle @enderror">
-                    @error('password') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
+                    <div class="relative flex items-center">
+                        <input 
+                            :type="showPass ? 'text' : 'password'" 
+                            wire:model.live.debounce.500ms="password" 
+                            class="w-full py-2 pl-3 pr-10 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm
+                            @error('password') border-danger focus:border-danger focus:ring-1 focus:ring-danger 
+                            @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror"
+                            placeholder="••••••••"
+                        >
+                        <button type="button" @click="showPass = !showPass" class="absolute right-3 text-text-muted hover:text-text-main transition-colors focus:outline-none cursor-pointer">
+                            <svg x-show="!showPass" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            <svg x-show="showPass" x-cloak class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/></svg>
+                        </button>
+                    </div>
+                    @error('password') 
+                        <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> 
+                    @enderror
                 </div>
+
+                {{-- Confirm Password Input --}}
                 <div>
                     <label class="block text-xs font-bold text-text-main mb-1">Confirm Password*</label>
-                    <input type="password" wire:model.live.debounce.500ms="password_confirmation" class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none text-sm @error('password_confirmation') border-danger @else border-border-subtle @enderror">
+                    <div class="relative flex items-center">
+                        <input 
+                            :type="showConfirm ? 'text' : 'password'" 
+                            wire:model.live.debounce.500ms="password_confirmation" 
+                            class="w-full py-2 pl-3 pr-10 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm
+                            @error('password_confirmation') border-danger focus:border-danger focus:ring-1 focus:ring-danger 
+                            @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror"
+                            placeholder="••••••••"
+                        >
+                        <button type="button" @click="showConfirm = !showConfirm" class="absolute right-3 text-text-muted hover:text-text-main transition-colors focus:outline-none cursor-pointer">
+                            <svg x-show="!showConfirm" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            <svg x-show="showConfirm" x-cloak class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/></svg>
+                        </button>
+                    </div>
+                    @error('password_confirmation') 
+                        <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> 
+                    @enderror
                 </div>
+
+                {{-- Action Buttons --}}
                 <div class="flex gap-3 mt-6">
-                    <button wire:click="backToStep(5)" class="flex-1 py-2.5 px-4 bg-surface-subtle hover:bg-border-subtle text-text-main text-sm font-bold rounded-xl transition-colors">Back</button>
-                    <button wire:click="nextStep(6)" class="flex-[2] py-2.5 px-4 bg-primary hover:bg-primary-dark text-surface text-sm font-bold rounded-xl transition-colors">Continue</button>
+                    <button 
+                        wire:click="backToStep(5)" 
+                        type="button"
+                        class="flex-1 py-2.5 px-4 bg-surface-subtle hover:bg-border-subtle text-text-main text-sm font-bold rounded-xl transition-colors cursor-pointer"
+                    >
+                        Back
+                    </button>
+                    <button 
+                        wire:click="nextStep(6)" 
+                        type="button"
+                        class="flex-[2] py-2.5 px-4 bg-primary hover:bg-primary-dark text-surface text-sm font-bold rounded-xl transition-colors cursor-pointer"
+                    >
+                        Continue
+                    </button>
                 </div>
             </div>
         @endif
@@ -267,7 +563,7 @@
                             <button wire:click="backToStep(3)" class="text-xs text-primary hover:underline font-bold">Edit</button>
                         </div>
                         <div class="grid grid-cols-2 gap-2 text-sm">
-                            <p class="text-text-muted">Contact No:</p><p class="font-medium text-text-main">{{ $contact_no }}</p>
+                            <p class="text-text-muted">Contact No:</p><p class="font-medium text-text-main">+63{{ $contact_no }}</p>
                             <p class="text-text-muted">Address:</p>
                             <p class="font-medium text-text-main">
                                 {{ $house_details ? $house_details . ', ' : '' }}{{ $street ? $street . ', ' : '' }}

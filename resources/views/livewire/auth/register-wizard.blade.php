@@ -76,36 +76,46 @@
     {{-- STEP 2: Personal Info --}}
     @if ($currentStep === 2)
         <div class="w-full max-w-md mx-auto space-y-4 sm:space-y-5">
+
+            {{-- First Name --}}
             <div>
                 <label class="block text-xs font-bold text-text-main mb-1">First Name*</label>
-                <input type="text" wire:model.live.debounce.500ms="first_name"
-                    class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm 
+                <input type="text" 
+                wire:model.live.debounce.500ms="first_name"
+                    x-on:input="$event.target.value = $event.target.value.replace(/\b\w/g, c => c.toUpperCase())"
+                    class="capitalize w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm 
                     @error('first_name') border-danger focus:border-danger focus:ring-1 focus:ring-danger 
-                    @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror"
-                    placeholder="John">
+                    @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror">
                 @error('first_name') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
             </div>
 
+            {{-- Last Name --}}
             <div>
                 <label class="block text-xs font-bold text-text-main mb-1">Last Name*</label>
-                <input type="text" wire:model.live.debounce.500ms="last_name"
-                    class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm 
+                <input type="text" 
+                    wire:model.live.debounce.500ms="last_name"
+                    x-on:input="$event.target.value = $event.target.value.replace(/\b\w/g, c => c.toUpperCase())"
+                    class="capitalize w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm 
                     @error('last_name') border-danger focus:border-danger focus:ring-1 focus:ring-danger 
-                    @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror"
-                    placeholder="Doe">
+                    @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror">
                 @error('last_name') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
             </div>
 
+            {{-- Middle Initial --}}
             <div>
                 <label class="block text-xs font-bold text-text-main mb-1">M.I.</label>
-                <input type="text" wire:model.live.debounce.500ms="middle_initial" maxlength="1"
+                <input type="text" 
+                    wire:model.live.debounce.500ms="middle_initial" 
+                    maxlength="1"
+                    x-on:input="$event.target.value = $event.target.value.toUpperCase()"
                     class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm uppercase 
                     @error('middle_initial') border-danger focus:border-danger focus:ring-1 focus:ring-danger 
                     @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror"
-                    placeholder="A">
+                    placeholder="M">
                 @error('middle_initial') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
             </div>
 
+            {{-- Sex --}}
             <div>
                 <label class="block text-xs font-bold text-text-main mb-1">Sex*</label>
                 <div class="flex gap-4 mt-2">
@@ -123,6 +133,7 @@
                 @error('sex') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
             </div>
 
+            {{-- Birthday --}}
             <div>
                 <label class="block text-xs font-bold text-text-main mb-1">Birthday*</label>
                 <!-- min/max explicitly blocks UI selection outside of 18-100 years old -->
@@ -150,24 +161,36 @@
 
     {{-- STEP 3: Password --}}
     @if ($currentStep === 3)
-        <div class="w-full max-w-md mx-auto space-y-4 sm:space-y-5">
+        <div class="w-full max-w-md mx-auto space-y-4 sm:space-y-5" x-data="{ showPass: false, showConfirm: false }">
             <div>
                 <label class="block text-xs font-bold text-text-main mb-1">Password*</label>
-                <input type="password" wire:model.live.debounce.500ms="password"
-                    class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm 
-                    @error('password') border-danger focus:border-danger focus:ring-1 focus:ring-danger 
-                    @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror"
-                    placeholder="••••••••">
+                <div class="relative flex items-center">
+                    <input :type="showPass ? 'text' : 'password'" wire:model.live.debounce.500ms="password"
+                        class="w-full py-2 pl-3 pr-10 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm 
+                        @error('password') border-danger focus:border-danger focus:ring-1 focus:ring-danger 
+                        @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror"
+                        placeholder="••••••••">
+                    <button type="button" @click="showPass = !showPass" class="absolute right-3 text-text-muted hover:text-text-main transition-colors focus:outline-none cursor-pointer">
+                        <svg x-show="!showPass" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        <svg x-show="showPass" x-cloak class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/></svg>
+                    </button>
+                </div>
                 @error('password') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-text-main mb-1">Confirm Password*</label>
-                <input type="password" wire:model.live.debounce.500ms="password_confirmation"
-                    class="w-full py-2 px-3 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm 
-                    @error('password_confirmation') border-danger focus:border-danger focus:ring-1 focus:ring-danger 
-                    @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror"
-                    placeholder="••••••••">
+                <div class="relative flex items-center">
+                    <input :type="showConfirm ? 'text' : 'password'" wire:model.live.debounce.500ms="password_confirmation"
+                        class="w-full py-2 pl-3 pr-10 border-2 rounded-xl bg-surface outline-none transition-all shadow-sm text-sm 
+                        @error('password_confirmation') border-danger focus:border-danger focus:ring-1 focus:ring-danger 
+                        @else border-border-subtle focus:border-text-main focus:ring-1 focus:ring-text-main @enderror"
+                        placeholder="••••••••">
+                    <button type="button" @click="showConfirm = !showConfirm" class="absolute right-3 text-text-muted hover:text-text-main transition-colors focus:outline-none cursor-pointer">
+                        <svg x-show="!showConfirm" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        <svg x-show="showConfirm" x-cloak class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/></svg>
+                    </button>
+                </div>
                 @error('password_confirmation') <p class="text-danger text-xs mt-1 font-medium">{{ $message }}</p> @enderror
             </div>
 

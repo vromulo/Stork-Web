@@ -65,6 +65,11 @@ class SellerRegisterWizard extends Component
     public string $password = '';
     public string $password_confirmation = '';
 
+    public function updatedContactNo($value)
+    {
+        $this->contact_no = preg_replace('/\D/', '', $value);
+    }
+
     public function mount()
     {
         $this->loadProvinces();
@@ -77,14 +82,36 @@ class SellerRegisterWizard extends Component
         } elseif ($this->currentStep === 2) {
             $this->validateOnly($propertyName, $this->getStep2Rules(), $this->getStep2Messages());
         } elseif ($this->currentStep === 3) {
-            $this->validateOnly($propertyName, $this->getStep3Rules());
+            if ($propertyName === 'contact_no') {
+                $this->validateOnly('contact_no', [
+                    'contact_no' => ['required', 'regex:/^9\d{2}\s?\d{3}\s?\d{4}$/']
+                ], [
+                    'contact_no.regex' => 'Please enter a valid 10-digit mobile number starting with 9.'
+                ]);
+            } else {
+                $this->validateOnly($propertyName, $this->getStep3Rules());
+            }
         } elseif ($this->currentStep === 4) {
             $this->validateOnly($propertyName, $this->getStep4Rules());
         } elseif ($this->currentStep === 5) {
             $this->validateOnly($propertyName, $this->getStep5Rules());
         } elseif ($this->currentStep === 6) {
-            if (in_array($propertyName, ['password', 'password_confirmation'])) {
-                $this->validateOnly('password', $this->getStep6Rules());
+            if ($propertyName === 'password') {
+                $this->validateOnly('password', $this->getStep6Rules(), $this->getStep6Messages());
+                if (!empty($this->password_confirmation)) {
+                    $this->validateOnly('password_confirmation', [
+                        'password_confirmation' => ['same:password']
+                    ], [
+                        'password_confirmation.same' => 'The password confirmation does not match.'
+                    ]);
+                }
+            } elseif ($propertyName === 'password_confirmation') {
+                $this->validateOnly('password_confirmation', [
+                    'password_confirmation' => ['required', 'same:password']
+                ], [
+                    'password_confirmation.required' => 'Please confirm your password.',
+                    'password_confirmation.same' => 'The password confirmation does not match.'
+                ]);
             }
         }
     }
@@ -102,6 +129,8 @@ class SellerRegisterWizard extends Component
     {
         $this->municipality_code = '';
         $this->barangay_code = '';
+        $this->municipality = '';
+        $this->barangay = '';
         $this->municipalities = [];
         $this->barangays = [];
         
@@ -111,7 +140,9 @@ class SellerRegisterWizard extends Component
         if ($code) {
             try {
                 $response = Http::get("https://psgc.gitlab.io/api/provinces/{$code}/cities-municipalities");
-                if ($response->successful()) $this->municipalities = $response->json();
+                if ($response->successful()) {
+                    $this->municipalities = $response->json();
+                }
             } catch (\Exception $e) {}
         }
     }
@@ -119,6 +150,7 @@ class SellerRegisterWizard extends Component
     public function updatedMunicipalityCode($code)
     {
         $this->barangay_code = '';
+        $this->barangay = '';
         $this->barangays = [];
 
         $mun = collect($this->municipalities)->firstWhere('code', $code);
@@ -127,7 +159,9 @@ class SellerRegisterWizard extends Component
         if ($code) {
             try {
                 $response = Http::get("https://psgc.gitlab.io/api/cities-municipalities/{$code}/barangays");
-                if ($response->successful()) $this->barangays = $response->json();
+                if ($response->successful()) {
+                    $this->barangays = $response->json();
+                }
             } catch (\Exception $e) {}
         }
     }
@@ -190,7 +224,7 @@ class SellerRegisterWizard extends Component
 
     protected function getStep3Rules(): array {
         return [
-            'contact_no' => ['required', 'regex:/^(09|\+639)\d{9}$/'],
+            'contact_no' => ['required', 'regex:/^9\d{2}\s?\d{3}\s?\d{4}$/'],
             'province_code' => ['required'],
             'municipality_code' => ['required'],
             'barangay_code' => ['required'],
@@ -210,11 +244,33 @@ class SellerRegisterWizard extends Component
 
     protected function getStep6Rules(): array {
         return [
-            'password' => ['required', 'string', 'min:8', 'confirmed', function ($attr, $value, $fail) {
-                if (!preg_match('/[A-Z]/', $value)) $fail('Must contain 1 uppercase letter.');
-                if (!preg_match('/[0-9]/', $value)) $fail('Must contain 1 number.');
-                if (!preg_match('/[\W_]/', $value)) $fail('Must contain 1 special character.');
-            }],
+           'password' => [
+                'required',
+                'string',
+                'min:8',
+                function ($attr, $value, $fail) {
+                    if (!preg_match('/[A-Z]/', $value)) {
+                        $fail('Password must contain at least 1 uppercase letter.');
+                    }
+                    if (!preg_match('/[0-9]/', $value)) {
+                        $fail('Password must contain at least 1 number.');
+                    }
+                    if (!preg_match('/[\W_]/', $value)) {
+                        $fail('Password must contain at least 1 special character.');
+                    }
+                },
+            ],
+            'password_confirmation' => ['required', 'same:password']
+        ];
+    }
+
+    protected function getStep6Messages(): array
+    {
+        return [
+            'password.required' => 'Please enter a password.',
+            'password.min' => 'Password must be at least 8 characters long.',
+            'password_confirmation.required' => 'Please confirm your password.',
+            'password_confirmation.same' => 'The password confirmation does not match.',
         ];
     }
 
@@ -223,7 +279,7 @@ class SellerRegisterWizard extends Component
         if ($step === 3) $this->validate($this->getStep3Rules());
         if ($step === 4) $this->validate($this->getStep4Rules());
         if ($step === 5) $this->validate($this->getStep5Rules());
-        if ($step === 6) $this->validate($this->getStep6Rules());
+        if ($step === 6) $this->validate($this->getStep6Rules(), $this->getStep6Messages());
         $this->currentStep = $step + 1;
     }
 
@@ -234,9 +290,11 @@ class SellerRegisterWizard extends Component
     public function register()
     {
         // Final complete validation before submission
-        $this->validate($this->getStep6Rules());
+        $this->validate($this->getStep6Rules(), $this->getStep6Messages());
 
-        DB::transaction(function () {
+        $formattedContactNo = '+63' . ltrim($this->contact_no, '0');
+
+        DB::transaction(function () use ($formattedContactNo) {
             // 1. Create Base User (Role: Seller)
             $user = User::create([
                 'first_name' => ucwords(strtolower($this->first_name)),
@@ -244,7 +302,7 @@ class SellerRegisterWizard extends Component
                 'middle_initial' => $this->middle_initial ? strtoupper($this->middle_initial) : null,
                 'sex' => $this->sex,
                 'email' => $this->email,
-                'contact_no' => $this->contact_no,
+                'contact_no' => $formattedContactNo,
                 'birthday' => $this->birthday,
                 'password' => Hash::make($this->password),
                 'role' => 'Seller',
@@ -257,7 +315,7 @@ class SellerRegisterWizard extends Component
             // 3. Create Seller Profile (Status: Pending)
             SellerProfile::create([
                 'user_id' => $user->id,
-                'contact_no' => $this->contact_no,
+                'contact_no' => $formattedContactNo,
                 'province' => $this->province,
                 'municipality' => $this->municipality,
                 'barangay' => $this->barangay,
