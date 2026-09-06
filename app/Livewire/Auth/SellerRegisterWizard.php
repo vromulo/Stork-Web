@@ -312,9 +312,10 @@ class SellerRegisterWizard extends Component
             $idPath = $this->valid_id->store('seller_documents/ids', 'public');
             $permitPath = $this->business_permit->store('seller_documents/permits', 'public');
 
-            // 3. Create Seller Profile (Status: Pending)
-            SellerProfile::create([
+            // 3. Store ONLY in seller_applications (DO NOT create SellerProfile yet)
+            \App\Models\SellerApplication::create([
                 'user_id' => $user->id,
+                'version' => 1,
                 'contact_no' => $formattedContactNo,
                 'province' => $this->province,
                 'municipality' => $this->municipality,

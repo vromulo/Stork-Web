@@ -40,4 +40,31 @@ class User extends Authenticatable
             'birthday' => 'date',
         ];
     }
+
+    /**
+     * The seller's current approved profile. Only exists once an
+     * application has been approved by an admin.
+     */
+    public function sellerProfile()
+    {
+        return $this->hasOne(SellerProfile::class);
+    }
+
+    /**
+     * Full application history (pending/approved/rejected), newest first.
+     */
+    public function sellerApplications()
+    {
+        return $this->hasMany(SellerApplication::class)->latest('version');
+    }
+
+    /**
+     * The most recent application submitted, regardless of status.
+     * This is the source of truth for "what state is this seller's
+     * application in right now" — never seller_profiles.
+     */
+    public function latestSellerApplication()
+    {
+        return $this->hasOne(SellerApplication::class)->latestOfMany('version');
+    }
 }

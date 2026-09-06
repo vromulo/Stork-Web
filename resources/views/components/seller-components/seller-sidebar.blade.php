@@ -32,6 +32,7 @@
         </a>
 
         <!-- Products -->
+        @if(auth()->user()->sellerProfile)
         <div>
             <button @click="if(!sidebarOpen) { sidebarOpen = true; activeDropdown = 'products'; } else { activeDropdown = activeDropdown === 'products' ? null : 'products'; }" 
                     class="flex items-center justify-between w-full px-3 py-3 rounded-xl transition-colors font-medium group whitespace-nowrap text-sm cursor-pointer {{ request()->is('seller/products*') ? 'text-primary bg-[#F9EBE3]' : 'text-text-muted hover:bg-[#F9EBE3] hover:text-primary' }}" 
@@ -50,8 +51,10 @@
                 <a href="{{ route('seller.products.archived') }}" class="{{ request()->routeIs('seller.products.archived') ? 'text-primary font-bold' : 'text-text-muted' }} block text-sm hover:text-primary transition-colors whitespace-nowrap cursor-pointer">Archived Products</a>
             </div>
         </div>
+        @endif
 
         <!-- Orders -->
+        @if(auth()->user()->sellerProfile)
         <div>
             <button @click="if(!sidebarOpen) { sidebarOpen = true; activeDropdown = 'orders'; } else { activeDropdown = activeDropdown === 'orders' ? null : 'orders'; }" 
                     class="flex items-center justify-between w-full px-3 py-3 rounded-xl transition-colors font-medium group whitespace-nowrap text-sm cursor-pointer {{ request()->is('seller/orders*') ? 'text-primary bg-[#F9EBE3]' : 'text-text-muted hover:bg-[#F9EBE3] hover:text-primary' }}" 
@@ -74,8 +77,10 @@
                 <a href="#" class="block text-xs text-text-muted hover:text-primary transition-colors whitespace-nowrap cursor-pointer">Cancelled / Returned</a>
             </div>
         </div>
+        @endif
 
         <!-- Promotions -->
+        @if(auth()->user()->sellerProfile)
         <div>
             <button @click="if(!sidebarOpen) { sidebarOpen = true; activeDropdown = 'promotions'; } else { activeDropdown = activeDropdown === 'promotions' ? null : 'promotions'; }" 
                     class="flex items-center justify-between w-full px-3 py-3 rounded-xl transition-colors font-medium group whitespace-nowrap text-sm cursor-pointer {{ request()->is('seller/promotions*') ? 'text-primary bg-[#F9EBE3]' : 'text-text-muted hover:bg-[#F9EBE3] hover:text-primary' }}" 
@@ -94,8 +99,10 @@
                 <a href="#" class="block text-xs text-text-muted hover:text-primary transition-colors whitespace-nowrap cursor-pointer">Campaigns</a>
             </div>
         </div>
+        @endif
 
         <!-- Sales & Reports -->
+        @if(auth()->user()->sellerProfile)
         <div>
             <button @click="if(!sidebarOpen) { sidebarOpen = true; activeDropdown = 'sales'; } else { activeDropdown = activeDropdown === 'sales' ? null : 'sales'; }" 
                     class="flex items-center justify-between w-full px-3 py-3 rounded-xl transition-colors font-medium group whitespace-nowrap text-sm cursor-pointer {{ request()->is('seller/sales*') ? 'text-primary bg-[#F9EBE3]' : 'text-text-muted hover:bg-[#F9EBE3] hover:text-primary' }}" 
@@ -114,6 +121,7 @@
                 <a href="#" class="block text-xs text-text-muted hover:text-primary transition-colors whitespace-nowrap cursor-pointer">Performance</a>
             </div>
         </div>
+        @endif
 
         <!-- Reviews & Feedback (No Sub-options) -->
         <a href="#" 

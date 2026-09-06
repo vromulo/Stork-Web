@@ -44,7 +44,9 @@
             <div x-show="activeDropdown === 'applications' && sidebarOpen" x-collapse x-cloak class="pl-12 pr-4 py-2 space-y-3">
                 <a href="#" class="block text-xs text-text-muted hover:text-primary transition-colors whitespace-nowrap cursor-pointer">All Applications</a>
                 <a href="#" class="block text-xs text-text-muted hover:text-primary transition-colors whitespace-nowrap cursor-pointer">Buyer Applications</a>
-                <a href="#" class="block text-xs text-text-muted hover:text-primary transition-colors whitespace-nowrap cursor-pointer">Seller Applications</a>
+                <a href="{{ route('admin.applications.sellers') }}" class="block text-xs text-text-muted hover:text-primary transition-colors whitespace-nowrap cursor-pointer">
+                    Seller Applications
+                </a>
                 <a href="#" class="block text-xs text-text-muted hover:text-primary transition-colors whitespace-nowrap cursor-pointer">Logistics Applications</a>
             </div>
         </div>

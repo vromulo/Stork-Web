@@ -8,38 +8,37 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('seller_profiles', function (Blueprint $table) {
+        Schema::create('seller_applications', function (Blueprint $table) {
             $table->id();
-
-            // A seller has exactly one profile, and it only exists once approved.
-            $table->foreignId('user_id')->unique()->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->unsignedInteger('version')->default(1);
             
-            // Address & Contact
+            // Snapshot of profile information
             $table->string('contact_no');
             $table->string('province');
             $table->string('municipality');
             $table->string('barangay');
             $table->string('street')->nullable();
             $table->string('house_details')->nullable();
-            
-            // Business
             $table->string('business_name');
             $table->string('line_of_business');
             
-            // Documents (Paths to storage/app/public)
+            // Submitted documents
             $table->string('id_path');
             $table->string('permit_path');
-
-            // NOTE: No status column here on purpose. seller_profiles represents
-            // the seller's current *approved* information only. Existence of a
-            // row means "approved". Pending/rejected state lives exclusively on
-            // seller_applications (the history/status source of truth).
+            
+            // Review state
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->text('rejection_reason')->nullable();
+            $table->foreignId('reviewed_by')->nullable()->constrained('admins')->nullOnDelete();
+            $table->timestamp('reviewed_at')->nullable();
+            
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('seller_profiles');
+        Schema::dropIfExists('seller_applications');
     }
 };
