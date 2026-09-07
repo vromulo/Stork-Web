@@ -11,7 +11,6 @@ use App\Http\Controllers\HomeController;
 
 use App\Http\Controllers\SellerAuthController;
 use App\Livewire\Admin\SellerApplications;
-use App\Http\Middleware\EnsureSellerIsApproved;
 use App\Http\Controllers\SellerController;
 use App\Http\Controllers\SellerProductController;
 
@@ -62,7 +61,7 @@ Route::middleware('auth')->group(function () {
     Route::get('pages/seller/seller-dashboard', [SellerController::class, 'index'])->name('seller.seller-dashboard');
     Route::get('pages/seller/reapply', [SellerController::class, 'showReapply'])->name('seller.reapply');
 
-    Route::prefix('seller')->name('seller.')->group(function () {
+    Route::prefix('seller')->name('seller.')->middleware('seller.approved')->group(function () {
         // Products
         Route::get('/products', [SellerProductController::class, 'index'])->name('products.index');
         Route::get('/products/create', [SellerProductController::class, 'create'])->name('products.create');
