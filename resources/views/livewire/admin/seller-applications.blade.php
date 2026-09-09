@@ -3,9 +3,6 @@
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
             <div class="flex items-center gap-3">
-                <a href="{{ route('admin.dashboard') }}" class="p-2 rounded-xl bg-surface border border-border-subtle hover:bg-brand-light/30 text-text-muted hover:text-primary transition-colors">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                </a>
                 <h1 class="text-2xl sm:text-3xl font-bold text-primary-dark">Seller Applications</h1>
             </div>
             <p class="text-text-muted text-xs sm:text-sm mt-1">Review, inspect documents, and manage seller onboardings.</p>
