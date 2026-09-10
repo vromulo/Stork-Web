@@ -9,7 +9,7 @@
     x-transition:leave-start="translate-y-0 opacity-100"
     x-transition:leave-end="-translate-y-4 opacity-0"
     x-effect="if (activeMenu) $el.scrollTop = 0"
-    class="hidden md:block absolute top-full left-0 right-0 mx-auto w-full max-w-7xl h-[450px] overflow-y-auto bg-surface border border-t-0 border-border-subtle z-50 rounded-b-2xl [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-surface-subtle [&::-webkit-scrollbar-thumb]:bg-border-subtle [&::-webkit-scrollbar-thumb]:rounded-full"
+    class="hidden md:block absolute top-full left-0 right-0 mx-auto w-full max-w-7xl h-[450px] overflow-y-auto bg-gradient-to-b from-white to-pink-100 border border-t-0 border-border-subtle z-50 rounded-b-2xl [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-surface-subtle [&::-webkit-scrollbar-thumb]:bg-border-subtle [&::-webkit-scrollbar-thumb]:rounded-full"
     x-cloak
     style="display: none;"
 >
@@ -32,8 +32,8 @@
                     
                     <!-- View All Link -->
                     <a href="{{ url('/category/' . Str::slug($categoryName)) }}" class="flex flex-col items-center group text-center">
-                        <div class="w-16 h-16 md:w-24 md:h-24 rounded-full overflow-hidden mb-2 md:mb-4 border-2 border-border-subtle group-hover:border-primary transition-colors duration-300 shadow-sm relative bg-[#1f2937] flex items-center justify-center shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 md:w-8 md:h-8 text-white group-hover:scale-110 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div class="w-16 h-16 md:w-24 md:h-24 rounded-full overflow-hidden mb-2 md:mb-4 border-2 border-text-muted group-hover:border-primary transition-colors duration-300 shadow-sm relative bg-gradient-to-br from-pink-100 to-pink-300 flex items-center justify-center shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 md:w-8 md:h-8 text-text-muted group-hover:text-primary group-hover:scale-110 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <rect x="4" y="4" width="6" height="6" rx="0.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                 <rect x="14" y="4" width="6" height="6" rx="0.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                 <rect x="4" y="14" width="6" height="6" rx="0.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -48,7 +48,7 @@
                     <!-- Subcategories with Theme Icons -->
                     @foreach($subcategories as $sub)
                         <a href="{{ url('/category/' . Str::slug($categoryName) . '?subcategory=' . urlencode($sub['name'])) }}" class="flex flex-col items-center group text-center">
-                            <div class="w-16 h-16 md:w-24 md:h-24 rounded-full overflow-hidden mb-2 md:mb-4 border-2 border-border-subtle group-hover:border-primary transition-colors duration-300 shadow-sm relative bg-[#F6D8BD] flex items-center justify-center shrink-0">
+                            <div class="w-16 h-16 md:w-24 md:h-24 rounded-full overflow-hidden mb-2 md:mb-4 border-2 border-text-muted group-hover:border-primary transition-colors duration-300 shadow-sm relative bg-gradient-to-br from-pink-100 to-pink-300 flex items-center justify-center shrink-0">
                                 @if(!empty($sub['icon']))
                                     {!! $sub['icon'] !!}
                                 @else

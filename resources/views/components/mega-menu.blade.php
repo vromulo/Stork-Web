@@ -100,6 +100,7 @@ $categories = [
     ]
 ];
 @endphp
+
 <!-- Mega Menu / Category Navigation Bar -->
 <div 
     x-data="{ 
@@ -134,7 +135,7 @@ $categories = [
         }
     }" 
     @mouseleave="activeMenu = null"
-    class="w-full bg-surface py-2 relative z-20 border-b border-border-subtle"
+    class="w-full bg-gradient-to-r from-[#F30399] via-[#CF4173] to-[#5D3140] py-2 relative z-20 border-b border-white/20"
 >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Inner wrapper to contain absolute positioned fades and arrows -->
@@ -149,7 +150,7 @@ $categories = [
                 x-transition:leave="transition ease-in duration-200"
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
-                class="absolute left-0 top-0 bottom-0 w-16 md:w-12 bg-gradient-to-r from-surface to-transparent z-10 pointer-events-none"
+                class="absolute left-0 top-0 bottom-0 w-16 md:w-12 bg-gradient-to-r from-[#F30399] to-transparent z-10 pointer-events-none"
                 x-cloak
             ></div>
 
@@ -164,7 +165,7 @@ $categories = [
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
                 @click="scroll('left')" 
-                class="absolute left-0 md:-left-2 top-1/2 -translate-y-1/2 z-20 bg-surface/90 shadow-sm backdrop-blur-sm rounded-full p-1.5 border border-border-subtle text-text-main hover:text-primary hover:border-primary transition-colors flex items-center justify-center cursor-pointer"
+                class="absolute left-0 md:-left-2 top-1/2 -translate-y-1/2 z-20 bg-black/20 shadow-sm backdrop-blur-sm rounded-full p-1.5 border border-white/30 text-white hover:text-[#F6D8BD] hover:border-[#F6D8BD] transition-colors flex items-center justify-center cursor-pointer"
                 aria-label="Previous categories"
                 x-cloak
             >
@@ -189,8 +190,8 @@ $categories = [
                         @mouseenter="setActive('{{ addslashes($categoryName) }}')"
                         @click="setActive('{{ addslashes($categoryName) }}')"
                         :class="activeMenu === '{{ addslashes($categoryName) }}' || {{ $isActive ? 'true' : 'false' }} 
-                            ? 'bg-primary text-surface font-semibold shadow-sm' 
-                            : 'text-text-main hover:text-primary hover:bg-surface-subtle'"
+                            ? 'bg-white text-[#CF4173] font-bold shadow-sm' 
+                            : 'text-white hover:text-[#F6D8BD] hover:bg-white/10'"
                         class="flex-shrink-0 text-sm font-medium px-4 py-1.5 rounded-full transition-all duration-300 whitespace-nowrap cursor-pointer {{ $isActive ? 'active-category' : '' }}"
                     >
                         {{ $categoryName }}
@@ -207,7 +208,7 @@ $categories = [
                 x-transition:leave="transition ease-in duration-200"
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
-                class="absolute right-0 top-0 bottom-0 w-16 md:w-12 bg-gradient-to-l from-surface to-transparent z-10 pointer-events-none"
+                class="absolute right-0 top-0 bottom-0 w-16 md:w-12 bg-gradient-to-l from-[#5D3140] to-transparent z-10 pointer-events-none"
                 x-cloak
             ></div>
 
@@ -222,7 +223,7 @@ $categories = [
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
                 @click="scroll('right')" 
-                class="absolute right-0 md:-right-2 top-1/2 -translate-y-1/2 z-20 bg-surface/90 shadow-sm backdrop-blur-sm rounded-full p-1.5 border border-border-subtle text-text-main hover:text-primary hover:border-primary transition-colors flex items-center justify-center cursor-pointer"
+                class="absolute right-0 md:-right-2 top-1/2 -translate-y-1/2 z-20 bg-black/20 shadow-sm backdrop-blur-sm rounded-full p-1.5 border border-white/30 text-white hover:text-[#F6D8BD] hover:border-[#F6D8BD] transition-colors flex items-center justify-center cursor-pointer"
                 aria-label="Next categories"
                 x-cloak
             >
