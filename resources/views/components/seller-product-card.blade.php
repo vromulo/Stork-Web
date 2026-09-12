@@ -1,7 +1,7 @@
 @props(['product'])
 
-<!-- Deepened the pink to a darker shade (#b30271), darkened the border for emphasis, and added a custom pink-tinted shadow -->
-<a href="{{ route('product.show', $product->id) }}" class="group block bg-gradient-to-br from-white to-[#b30271]/15 rounded-2xl p-4 shadow-md shadow-[#b30271]/10 hover:shadow-xl hover:shadow-[#b30271]/30 border border-[#b30271]/40 transition-all duration-300 cursor-pointer">
+<!-- Removed gradient and applied solid pink base -->
+<a href="{{ route('product.show', $product->id) }}" class="group block bg-[#b30271]/15 rounded-2xl p-4 shadow-md shadow-[#b30271]/10 hover:shadow-xl hover:shadow-[#b30271]/30 border border-[#b30271]/40 transition-all duration-300 cursor-pointer">
     <!-- Image -->
     <div class="relative w-full h-48 mb-4 overflow-hidden rounded-xl bg-gray-50 flex items-center justify-center">
         @if(!empty($product->pictures) && is_array($product->pictures))
